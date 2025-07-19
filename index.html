@@ -1,0 +1,1089 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>National Gymnastics League Table</title>
+  <link href="https://unpkg.com/gridjs/dist/theme/mermaid.min.css" rel="stylesheet" />
+  <script src="https://unpkg.com/gridjs/dist/gridjs.umd.js"></script>
+  <style>
+    body {
+      font-family: 'Segoe UI', Roboto, sans-serif;
+      background: #f4f4f9;
+      color: #333;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      padding: 1rem;
+      background: #1e1b58;
+      color: white;
+      text-align: center;
+      font-size: 1.5rem;
+    }
+    #filters {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1rem;
+      background: #e0e0f0;
+      padding: 1rem;
+    }
+    #filters select {
+      padding: 0.5rem;
+      font-size: 1rem;
+      border-radius: 5px;
+    }
+    #table {
+      margin: 2rem auto;
+      max-width: 1100px;
+    }
+  </style>
+</head>
+<body>
+  <header>National Gymnastics League Table</header>
+
+  <div id="filters">
+    <select id="ageFilter" onchange="renderTable()"> </select>
+    <select id="trainingFilter" onchange="renderTable()"> </select>
+    <select id="clubFilter" onchange="renderTable()"> </select>
+    <select id="regionFilter" onchange="renderTable()"> </select>
+  </div>
+
+  <div id="table"></div>
+
+  <script>
+    const allData = [
+  {
+    "Gymnast": "Gymnast 26",
+    "Score": 12.98,
+    "Age Group": "15+",
+    "Training Hours": "2-5 hrs",
+    "Club": "Club C",
+    "Region": "East",
+    "Rank": 1
+  },
+  {
+    "Gymnast": "Gymnast 23",
+    "Score": 12.83,
+    "Age Group": "6-8",
+    "Training Hours": "2-5 hrs",
+    "Club": "Club A",
+    "Region": "North",
+    "Rank": 2
+  },
+  {
+    "Gymnast": "Gymnast 7",
+    "Score": 12.79,
+    "Age Group": "15+",
+    "Training Hours": "2-5 hrs",
+    "Club": "Club F",
+    "Region": "Scotland",
+    "Rank": 3
+  },
+  {
+    "Gymnast": "Gymnast 26",
+    "Score": 12.67,
+    "Age Group": "12-14",
+    "Training Hours": "6-10 hrs",
+    "Club": "Club A",
+    "Region": "North",
+    "Rank": 4
+  },
+  {
+    "Gymnast": "Gymnast 28",
+    "Score": 12.66,
+    "Age Group": "15+",
+    "Training Hours": "6-10 hrs",
+    "Club": "Club C",
+    "Region": "East",
+    "Rank": 5
+  },
+  {
+    "Gymnast": "Gymnast 17",
+    "Score": 12.66,
+    "Age Group": "9-11",
+    "Training Hours": "2-5 hrs",
+    "Club": "Club B",
+    "Region": "South",
+    "Rank": 5
+  },
+  {
+    "Gymnast": "Gymnast 15",
+    "Score": 12.63,
+    "Age Group": "6-8",
+    "Training Hours": "2-5 hrs",
+    "Club": "Club F",
+    "Region": "Scotland",
+    "Rank": 7
+  },
+  {
+    "Gymnast": "Gymnast 8",
+    "Score": 12.58,
+    "Age Group": "12-14",
+    "Training Hours": "6-10 hrs",
+    "Club": "Club A",
+    "Region": "North",
+    "Rank": 8
+  },
+  {
+    "Gymnast": "Gymnast 36",
+    "Score": 12.3,
+    "Age Group": "15+",
+    "Training Hours": "2-5 hrs",
+    "Club": "Club D",
+    "Region": "West",
+    "Rank": 9
+  },
+  {
+    "Gymnast": "Gymnast 6",
+    "Score": 12.29,
+    "Age Group": "6-8",
+    "Training Hours": "6-10 hrs",
+    "Club": "Club D",
+    "Region": "West",
+    "Rank": 10
+  },
+  {
+    "Gymnast": "Gymnast 12",
+    "Score": 12.22,
+    "Age Group": "15+",
+    "Training Hours": "2-5 hrs",
+    "Club": "Club C",
+    "Region": "East",
+    "Rank": 11
+  },
+  {
+    "Gymnast": "Gymnast 11",
+    "Score": 12.2,
+    "Age Group": "6-8",
+    "Training Hours": "6-10 hrs",
+    "Club": "Club F",
+    "Region": "Scotland",
+    "Rank": 12
+  },
+  {
+    "Gymnast": "Gymnast 34",
+    "Score": 12.18,
+    "Age Group": "9-11",
+    "Training Hours": "6-10 hrs",
+    "Club": "Club D",
+    "Region": "West",
+    "Rank": 13
+  },
+  {
+    "Gymnast": "Gymnast 12",
+    "Score": 12.16,
+    "Age Group": "12-14",
+    "Training Hours": "6-10 hrs",
+    "Club": "Club E",
+    "Region": "Central",
+    "Rank": 14
+  },
+  {
+    "Gymnast": "Gymnast 16",
+    "Score": 12.14,
+    "Age Group": "9-11",
+    "Training Hours": "6-10 hrs",
+    "Club": "Club B",
+    "Region": "South",
+    "Rank": 15
+  },
+  {
+    "Gymnast": "Gymnast 19",
+    "Score": 12.13,
+    "Age Group": "12-14",
+    "Training Hours": "2-5 hrs",
+    "Club": "Club F",
+    "Region": "Scotland",
+    "Rank": 16
+  },
+  {
+    "Gymnast": "Gymnast 13",
+    "Score": 12.04,
+    "Age Group": "6-8",
+    "Training Hours": "2-5 hrs",
+    "Club": "Club D",
+    "Region": "West",
+    "Rank": 17
+  },
+  {
+    "Gymnast": "Gymnast 34",
+    "Score": 12.04,
+    "Age Group": "9-11",
+    "Training Hours": "6-10 hrs",
+    "Club": "Club F",
+    "Region": "Scotland",
+    "Rank": 17
+  },
+  {
+    "Gymnast": "Gymnast 27",
+    "Score": 12.01,
+    "Age Group": "9-11",
+    "Training Hours": "6-10 hrs",
+    "Club": "Club B",
+    "Region": "South",
+    "Rank": 19
+  },
+  {
+    "Gymnast": "Gymnast 13",
+    "Score": 11.99,
+    "Age Group": "15+",
+    "Training Hours": "6-10 hrs",
+    "Club": "Club E",
+    "Region": "Central",
+    "Rank": 20
+  },
+  {
+    "Gymnast": "Gymnast 29",
+    "Score": 11.99,
+    "Age Group": "9-11",
+    "Training Hours": "6-10 hrs",
+    "Club": "Club D",
+    "Region": "West",
+    "Rank": 20
+  },
+  {
+    "Gymnast": "Gymnast 31",
+    "Score": 11.96,
+    "Age Group": "9-11",
+    "Training Hours": "2-5 hrs",
+    "Club": "Club B",
+    "Region": "South",
+    "Rank": 22
+  },
+  {
+    "Gymnast": "Gymnast 11",
+    "Score": 11.9,
+    "Age Group": "9-11",
+    "Training Hours": "6-10 hrs",
+    "Club": "Club E",
+    "Region": "Central",
+    "Rank": 23
+  },
+  {
+    "Gymnast": "Gymnast 35",
+    "Score": 11.86,
+    "Age Group": "12-14",
+    "Training Hours": "2-5 hrs",
+    "Club": "Club F",
+    "Region": "Scotland",
+    "Rank": 24
+  },
+  {
+    "Gymnast": "Gymnast 27",
+    "Score": 11.82,
+    "Age Group": "9-11",
+    "Training Hours": "6-10 hrs",
+    "Club": "Club A",
+    "Region": "North",
+    "Rank": 25
+  },
+  {
+    "Gymnast": "Gymnast 7",
+    "Score": 11.8,
+    "Age Group": "15+",
+    "Training Hours": "6-10 hrs",
+    "Club": "Club E",
+    "Region": "Central",
+    "Rank": 26
+  },
+  {
+    "Gymnast": "Gymnast 31",
+    "Score": 11.79,
+    "Age Group": "6-8",
+    "Training Hours": "6-10 hrs",
+    "Club": "Club D",
+    "Region": "West",
+    "Rank": 27
+  },
+  {
+    "Gymnast": "Gymnast 3",
+    "Score": 11.79,
+    "Age Group": "9-11",
+    "Training Hours": "6-10 hrs",
+    "Club": "Club B",
+    "Region": "South",
+    "Rank": 27
+  },
+  {
+    "Gymnast": "Gymnast 11",
+    "Score": 11.76,
+    "Age Group": "6-8",
+    "Training Hours": "2-5 hrs",
+    "Club": "Club C",
+    "Region": "East",
+    "Rank": 29
+  },
+  {
+    "Gymnast": "Gymnast 36",
+    "Score": 11.73,
+    "Age Group": "12-14",
+    "Training Hours": "2-5 hrs",
+    "Club": "Club F",
+    "Region": "Scotland",
+    "Rank": 30
+  },
+  {
+    "Gymnast": "Gymnast 25",
+    "Score": 11.72,
+    "Age Group": "15+",
+    "Training Hours": "2-5 hrs",
+    "Club": "Club B",
+    "Region": "South",
+    "Rank": 31
+  },
+  {
+    "Gymnast": "Gymnast 3",
+    "Score": 11.37,
+    "Age Group": "12-14",
+    "Training Hours": "2-5 hrs",
+    "Club": "Club C",
+    "Region": "East",
+    "Rank": 32
+  },
+  {
+    "Gymnast": "Gymnast 4",
+    "Score": 11.37,
+    "Age Group": "6-8",
+    "Training Hours": "6-10 hrs",
+    "Club": "Club F",
+    "Region": "Scotland",
+    "Rank": 32
+  },
+  {
+    "Gymnast": "Gymnast 30",
+    "Score": 11.17,
+    "Age Group": "12-14",
+    "Training Hours": "6-10 hrs",
+    "Club": "Club A",
+    "Region": "North",
+    "Rank": 34
+  },
+  {
+    "Gymnast": "Gymnast 33",
+    "Score": 11.13,
+    "Age Group": "12-14",
+    "Training Hours": "6-10 hrs",
+    "Club": "Club A",
+    "Region": "North",
+    "Rank": 35
+  },
+  {
+    "Gymnast": "Gymnast 13",
+    "Score": 11.12,
+    "Age Group": "9-11",
+    "Training Hours": "6-10 hrs",
+    "Club": "Club B",
+    "Region": "South",
+    "Rank": 36
+  },
+  {
+    "Gymnast": "Gymnast 4",
+    "Score": 11.09,
+    "Age Group": "9-11",
+    "Training Hours": "2-5 hrs",
+    "Club": "Club E",
+    "Region": "Central",
+    "Rank": 37
+  },
+  {
+    "Gymnast": "Gymnast 21",
+    "Score": 11.06,
+    "Age Group": "12-14",
+    "Training Hours": "6-10 hrs",
+    "Club": "Club D",
+    "Region": "West",
+    "Rank": 38
+  },
+  {
+    "Gymnast": "Gymnast 10",
+    "Score": 10.95,
+    "Age Group": "12-14",
+    "Training Hours": "6-10 hrs",
+    "Club": "Club B",
+    "Region": "South",
+    "Rank": 39
+  },
+  {
+    "Gymnast": "Gymnast 2",
+    "Score": 10.91,
+    "Age Group": "15+",
+    "Training Hours": "2-5 hrs",
+    "Club": "Club B",
+    "Region": "South",
+    "Rank": 40
+  },
+  {
+    "Gymnast": "Gymnast 5",
+    "Score": 10.9,
+    "Age Group": "9-11",
+    "Training Hours": "2-5 hrs",
+    "Club": "Club A",
+    "Region": "North",
+    "Rank": 41
+  },
+  {
+    "Gymnast": "Gymnast 20",
+    "Score": 10.87,
+    "Age Group": "9-11",
+    "Training Hours": "2-5 hrs",
+    "Club": "Club E",
+    "Region": "Central",
+    "Rank": 42
+  },
+  {
+    "Gymnast": "Gymnast 8",
+    "Score": 10.77,
+    "Age Group": "12-14",
+    "Training Hours": "2-5 hrs",
+    "Club": "Club E",
+    "Region": "Central",
+    "Rank": 43
+  },
+  {
+    "Gymnast": "Gymnast 12",
+    "Score": 10.76,
+    "Age Group": "12-14",
+    "Training Hours": "2-5 hrs",
+    "Club": "Club A",
+    "Region": "North",
+    "Rank": 44
+  },
+  {
+    "Gymnast": "Gymnast 3",
+    "Score": 10.68,
+    "Age Group": "9-11",
+    "Training Hours": "6-10 hrs",
+    "Club": "Club E",
+    "Region": "Central",
+    "Rank": 45
+  },
+  {
+    "Gymnast": "Gymnast 32",
+    "Score": 10.67,
+    "Age Group": "12-14",
+    "Training Hours": "6-10 hrs",
+    "Club": "Club B",
+    "Region": "South",
+    "Rank": 46
+  },
+  {
+    "Gymnast": "Gymnast 30",
+    "Score": 10.62,
+    "Age Group": "9-11",
+    "Training Hours": "2-5 hrs",
+    "Club": "Club C",
+    "Region": "East",
+    "Rank": 47
+  },
+  {
+    "Gymnast": "Gymnast 6",
+    "Score": 10.61,
+    "Age Group": "15+",
+    "Training Hours": "2-5 hrs",
+    "Club": "Club E",
+    "Region": "Central",
+    "Rank": 48
+  },
+  {
+    "Gymnast": "Gymnast 35",
+    "Score": 10.6,
+    "Age Group": "12-14",
+    "Training Hours": "2-5 hrs",
+    "Club": "Club E",
+    "Region": "Central",
+    "Rank": 49
+  },
+  {
+    "Gymnast": "Gymnast 16",
+    "Score": 10.57,
+    "Age Group": "6-8",
+    "Training Hours": "2-5 hrs",
+    "Club": "Club B",
+    "Region": "South",
+    "Rank": 50
+  },
+  {
+    "Gymnast": "Gymnast 18",
+    "Score": 10.43,
+    "Age Group": "12-14",
+    "Training Hours": "2-5 hrs",
+    "Club": "Club B",
+    "Region": "South",
+    "Rank": 51
+  },
+  {
+    "Gymnast": "Gymnast 8",
+    "Score": 10.38,
+    "Age Group": "6-8",
+    "Training Hours": "2-5 hrs",
+    "Club": "Club F",
+    "Region": "Scotland",
+    "Rank": 52
+  },
+  {
+    "Gymnast": "Gymnast 2",
+    "Score": 10.31,
+    "Age Group": "15+",
+    "Training Hours": "2-5 hrs",
+    "Club": "Club B",
+    "Region": "South",
+    "Rank": 53
+  },
+  {
+    "Gymnast": "Gymnast 29",
+    "Score": 10.3,
+    "Age Group": "15+",
+    "Training Hours": "2-5 hrs",
+    "Club": "Club B",
+    "Region": "South",
+    "Rank": 54
+  },
+  {
+    "Gymnast": "Gymnast 14",
+    "Score": 10.29,
+    "Age Group": "12-14",
+    "Training Hours": "6-10 hrs",
+    "Club": "Club E",
+    "Region": "Central",
+    "Rank": 55
+  },
+  {
+    "Gymnast": "Gymnast 9",
+    "Score": 10.28,
+    "Age Group": "6-8",
+    "Training Hours": "2-5 hrs",
+    "Club": "Club D",
+    "Region": "West",
+    "Rank": 56
+  },
+  {
+    "Gymnast": "Gymnast 17",
+    "Score": 10.18,
+    "Age Group": "15+",
+    "Training Hours": "2-5 hrs",
+    "Club": "Club C",
+    "Region": "East",
+    "Rank": 57
+  },
+  {
+    "Gymnast": "Gymnast 24",
+    "Score": 10.17,
+    "Age Group": "15+",
+    "Training Hours": "2-5 hrs",
+    "Club": "Club C",
+    "Region": "East",
+    "Rank": 58
+  },
+  {
+    "Gymnast": "Gymnast 34",
+    "Score": 10.14,
+    "Age Group": "6-8",
+    "Training Hours": "2-5 hrs",
+    "Club": "Club D",
+    "Region": "West",
+    "Rank": 59
+  },
+  {
+    "Gymnast": "Gymnast 30",
+    "Score": 10.1,
+    "Age Group": "9-11",
+    "Training Hours": "6-10 hrs",
+    "Club": "Club E",
+    "Region": "Central",
+    "Rank": 60
+  },
+  {
+    "Gymnast": "Gymnast 23",
+    "Score": 10.09,
+    "Age Group": "6-8",
+    "Training Hours": "2-5 hrs",
+    "Club": "Club C",
+    "Region": "East",
+    "Rank": 61
+  },
+  {
+    "Gymnast": "Gymnast 28",
+    "Score": 10.07,
+    "Age Group": "15+",
+    "Training Hours": "2-5 hrs",
+    "Club": "Club E",
+    "Region": "Central",
+    "Rank": 62
+  },
+  {
+    "Gymnast": "Gymnast 22",
+    "Score": 10.03,
+    "Age Group": "15+",
+    "Training Hours": "2-5 hrs",
+    "Club": "Club A",
+    "Region": "North",
+    "Rank": 63
+  },
+  {
+    "Gymnast": "Gymnast 33",
+    "Score": 10.02,
+    "Age Group": "15+",
+    "Training Hours": "6-10 hrs",
+    "Club": "Club D",
+    "Region": "West",
+    "Rank": 64
+  },
+  {
+    "Gymnast": "Gymnast 29",
+    "Score": 9.86,
+    "Age Group": "12-14",
+    "Training Hours": "2-5 hrs",
+    "Club": "Club C",
+    "Region": "East",
+    "Rank": 65
+  },
+  {
+    "Gymnast": "Gymnast 22",
+    "Score": 9.66,
+    "Age Group": "9-11",
+    "Training Hours": "2-5 hrs",
+    "Club": "Club C",
+    "Region": "East",
+    "Rank": 66
+  },
+  {
+    "Gymnast": "Gymnast 21",
+    "Score": 9.65,
+    "Age Group": "9-11",
+    "Training Hours": "2-5 hrs",
+    "Club": "Club E",
+    "Region": "Central",
+    "Rank": 67
+  },
+  {
+    "Gymnast": "Gymnast 33",
+    "Score": 9.64,
+    "Age Group": "9-11",
+    "Training Hours": "6-10 hrs",
+    "Club": "Club C",
+    "Region": "East",
+    "Rank": 68
+  },
+  {
+    "Gymnast": "Gymnast 9",
+    "Score": 9.64,
+    "Age Group": "12-14",
+    "Training Hours": "6-10 hrs",
+    "Club": "Club C",
+    "Region": "East",
+    "Rank": 68
+  },
+  {
+    "Gymnast": "Gymnast 2",
+    "Score": 9.6,
+    "Age Group": "15+",
+    "Training Hours": "2-5 hrs",
+    "Club": "Club C",
+    "Region": "East",
+    "Rank": 70
+  },
+  {
+    "Gymnast": "Gymnast 35",
+    "Score": 9.56,
+    "Age Group": "9-11",
+    "Training Hours": "2-5 hrs",
+    "Club": "Club D",
+    "Region": "West",
+    "Rank": 71
+  },
+  {
+    "Gymnast": "Gymnast 32",
+    "Score": 9.56,
+    "Age Group": "6-8",
+    "Training Hours": "2-5 hrs",
+    "Club": "Club C",
+    "Region": "East",
+    "Rank": 71
+  },
+  {
+    "Gymnast": "Gymnast 14",
+    "Score": 9.52,
+    "Age Group": "15+",
+    "Training Hours": "6-10 hrs",
+    "Club": "Club C",
+    "Region": "East",
+    "Rank": 73
+  },
+  {
+    "Gymnast": "Gymnast 1",
+    "Score": 9.35,
+    "Age Group": "9-11",
+    "Training Hours": "6-10 hrs",
+    "Club": "Club D",
+    "Region": "West",
+    "Rank": 74
+  },
+  {
+    "Gymnast": "Gymnast 28",
+    "Score": 9.32,
+    "Age Group": "6-8",
+    "Training Hours": "2-5 hrs",
+    "Club": "Club E",
+    "Region": "Central",
+    "Rank": 75
+  },
+  {
+    "Gymnast": "Gymnast 21",
+    "Score": 9.17,
+    "Age Group": "6-8",
+    "Training Hours": "6-10 hrs",
+    "Club": "Club F",
+    "Region": "Scotland",
+    "Rank": 76
+  },
+  {
+    "Gymnast": "Gymnast 20",
+    "Score": 9.17,
+    "Age Group": "15+",
+    "Training Hours": "2-5 hrs",
+    "Club": "Club D",
+    "Region": "West",
+    "Rank": 76
+  },
+  {
+    "Gymnast": "Gymnast 24",
+    "Score": 9.13,
+    "Age Group": "9-11",
+    "Training Hours": "6-10 hrs",
+    "Club": "Club A",
+    "Region": "North",
+    "Rank": 78
+  },
+  {
+    "Gymnast": "Gymnast 1",
+    "Score": 9.12,
+    "Age Group": "15+",
+    "Training Hours": "2-5 hrs",
+    "Club": "Club D",
+    "Region": "West",
+    "Rank": 79
+  },
+  {
+    "Gymnast": "Gymnast 16",
+    "Score": 9.05,
+    "Age Group": "15+",
+    "Training Hours": "2-5 hrs",
+    "Club": "Club E",
+    "Region": "Central",
+    "Rank": 80
+  },
+  {
+    "Gymnast": "Gymnast 19",
+    "Score": 9.0,
+    "Age Group": "6-8",
+    "Training Hours": "2-5 hrs",
+    "Club": "Club C",
+    "Region": "East",
+    "Rank": 81
+  },
+  {
+    "Gymnast": "Gymnast 18",
+    "Score": 8.99,
+    "Age Group": "15+",
+    "Training Hours": "6-10 hrs",
+    "Club": "Club D",
+    "Region": "West",
+    "Rank": 82
+  },
+  {
+    "Gymnast": "Gymnast 10",
+    "Score": 8.94,
+    "Age Group": "9-11",
+    "Training Hours": "6-10 hrs",
+    "Club": "Club C",
+    "Region": "East",
+    "Rank": 83
+  },
+  {
+    "Gymnast": "Gymnast 9",
+    "Score": 8.79,
+    "Age Group": "15+",
+    "Training Hours": "6-10 hrs",
+    "Club": "Club A",
+    "Region": "North",
+    "Rank": 84
+  },
+  {
+    "Gymnast": "Gymnast 1",
+    "Score": 8.77,
+    "Age Group": "15+",
+    "Training Hours": "6-10 hrs",
+    "Club": "Club A",
+    "Region": "North",
+    "Rank": 85
+  },
+  {
+    "Gymnast": "Gymnast 36",
+    "Score": 8.74,
+    "Age Group": "9-11",
+    "Training Hours": "2-5 hrs",
+    "Club": "Club F",
+    "Region": "Scotland",
+    "Rank": 86
+  },
+  {
+    "Gymnast": "Gymnast 23",
+    "Score": 8.69,
+    "Age Group": "9-11",
+    "Training Hours": "6-10 hrs",
+    "Club": "Club C",
+    "Region": "East",
+    "Rank": 87
+  },
+  {
+    "Gymnast": "Gymnast 19",
+    "Score": 8.68,
+    "Age Group": "6-8",
+    "Training Hours": "6-10 hrs",
+    "Club": "Club F",
+    "Region": "Scotland",
+    "Rank": 88
+  },
+  {
+    "Gymnast": "Gymnast 18",
+    "Score": 8.6,
+    "Age Group": "15+",
+    "Training Hours": "6-10 hrs",
+    "Club": "Club E",
+    "Region": "Central",
+    "Rank": 89
+  },
+  {
+    "Gymnast": "Gymnast 6",
+    "Score": 8.6,
+    "Age Group": "6-8",
+    "Training Hours": "2-5 hrs",
+    "Club": "Club F",
+    "Region": "Scotland",
+    "Rank": 89
+  },
+  {
+    "Gymnast": "Gymnast 22",
+    "Score": 8.57,
+    "Age Group": "12-14",
+    "Training Hours": "6-10 hrs",
+    "Club": "Club C",
+    "Region": "East",
+    "Rank": 91
+  },
+  {
+    "Gymnast": "Gymnast 15",
+    "Score": 8.56,
+    "Age Group": "15+",
+    "Training Hours": "6-10 hrs",
+    "Club": "Club F",
+    "Region": "Scotland",
+    "Rank": 92
+  },
+  {
+    "Gymnast": "Gymnast 24",
+    "Score": 8.56,
+    "Age Group": "6-8",
+    "Training Hours": "2-5 hrs",
+    "Club": "Club F",
+    "Region": "Scotland",
+    "Rank": 92
+  },
+  {
+    "Gymnast": "Gymnast 25",
+    "Score": 8.5,
+    "Age Group": "12-14",
+    "Training Hours": "2-5 hrs",
+    "Club": "Club C",
+    "Region": "East",
+    "Rank": 94
+  },
+  {
+    "Gymnast": "Gymnast 14",
+    "Score": 8.38,
+    "Age Group": "9-11",
+    "Training Hours": "2-5 hrs",
+    "Club": "Club D",
+    "Region": "West",
+    "Rank": 95
+  },
+  {
+    "Gymnast": "Gymnast 25",
+    "Score": 8.37,
+    "Age Group": "15+",
+    "Training Hours": "6-10 hrs",
+    "Club": "Club C",
+    "Region": "East",
+    "Rank": 96
+  },
+  {
+    "Gymnast": "Gymnast 31",
+    "Score": 8.32,
+    "Age Group": "15+",
+    "Training Hours": "6-10 hrs",
+    "Club": "Club E",
+    "Region": "Central",
+    "Rank": 97
+  },
+  {
+    "Gymnast": "Gymnast 10",
+    "Score": 8.3,
+    "Age Group": "12-14",
+    "Training Hours": "6-10 hrs",
+    "Club": "Club C",
+    "Region": "East",
+    "Rank": 98
+  },
+  {
+    "Gymnast": "Gymnast 7",
+    "Score": 8.29,
+    "Age Group": "6-8",
+    "Training Hours": "2-5 hrs",
+    "Club": "Club E",
+    "Region": "Central",
+    "Rank": 99
+  },
+  {
+    "Gymnast": "Gymnast 32",
+    "Score": 8.27,
+    "Age Group": "6-8",
+    "Training Hours": "6-10 hrs",
+    "Club": "Club E",
+    "Region": "Central",
+    "Rank": 100
+  },
+  {
+    "Gymnast": "Gymnast 26",
+    "Score": 8.27,
+    "Age Group": "9-11",
+    "Training Hours": "6-10 hrs",
+    "Club": "Club C",
+    "Region": "East",
+    "Rank": 100
+  },
+  {
+    "Gymnast": "Gymnast 17",
+    "Score": 8.24,
+    "Age Group": "15+",
+    "Training Hours": "2-5 hrs",
+    "Club": "Club D",
+    "Region": "West",
+    "Rank": 102
+  },
+  {
+    "Gymnast": "Gymnast 27",
+    "Score": 8.21,
+    "Age Group": "9-11",
+    "Training Hours": "2-5 hrs",
+    "Club": "Club C",
+    "Region": "East",
+    "Rank": 103
+  },
+  {
+    "Gymnast": "Gymnast 4",
+    "Score": 8.21,
+    "Age Group": "15+",
+    "Training Hours": "2-5 hrs",
+    "Club": "Club F",
+    "Region": "Scotland",
+    "Rank": 103
+  },
+  {
+    "Gymnast": "Gymnast 15",
+    "Score": 8.19,
+    "Age Group": "15+",
+    "Training Hours": "2-5 hrs",
+    "Club": "Club A",
+    "Region": "North",
+    "Rank": 105
+  },
+  {
+    "Gymnast": "Gymnast 5",
+    "Score": 8.11,
+    "Age Group": "9-11",
+    "Training Hours": "2-5 hrs",
+    "Club": "Club C",
+    "Region": "East",
+    "Rank": 106
+  },
+  {
+    "Gymnast": "Gymnast 5",
+    "Score": 8.09,
+    "Age Group": "6-8",
+    "Training Hours": "2-5 hrs",
+    "Club": "Club F",
+    "Region": "Scotland",
+    "Rank": 107
+  },
+  {
+    "Gymnast": "Gymnast 20",
+    "Score": 8.08,
+    "Age Group": "6-8",
+    "Training Hours": "6-10 hrs",
+    "Club": "Club A",
+    "Region": "North",
+    "Rank": 108
+  }
+];
+
+    function populateFilters() {
+      populateSelect("ageFilter", [...new Set(allData.map(r => r["Age Group"]))], "All Age Groups");
+      populateSelect("trainingFilter", [...new Set(allData.map(r => r["Training Hours"]))], "All Training Times");
+      populateSelect("clubFilter", [...new Set(allData.map(r => r["Club"]))], "All Clubs");
+      populateSelect("regionFilter", [...new Set(allData.map(r => r["Region"]))], "All Regions");
+    }
+
+    function populateSelect(id, values, placeholder) {
+      const sel = document.getElementById(id);
+      sel.innerHTML = '<option value="">' + placeholder + '</option>' + values.sort().map(v => `<option value="${v}">${v}</option>`).join('');
+    }
+
+    function renderTable() {
+      const filters = {
+        age: document.getElementById("ageFilter").value.trim(),
+        training: document.getElementById("trainingFilter").value.trim(),
+        club: document.getElementById("clubFilter").value.trim(),
+        region: document.getElementById("regionFilter").value.trim()
+      };
+
+      const match = (val, filter) => !filter || (val || '').toString().trim().toLowerCase() === filter.trim().toLowerCase();
+
+      const filtered = allData.filter(row =>
+        match(row["Age Group"], filters.age) &&
+        match(row["Training Hours"], filters.training) &&
+        match(row["Club"], filters.club) &&
+        match(row["Region"], filters.region)
+      );
+
+      // Re-rank based on filtered score
+      const sorted = filtered
+        .slice()
+        .sort((a, b) => parseFloat(b["Score"]) - parseFloat(a["Score"]))
+        .map((r, i) => {
+          return {
+            ...r,
+            Rank: i + 1
+          };
+        });
+
+      document.getElementById("table").innerHTML = "";
+      new gridjs.Grid({
+        columns: ["Rank", "Gymnast", "Score", "Age Group", "Training Hours", "Club", "Region"],
+        data: sorted.map(row => [
+          row["Rank"], row["Gymnast"], row["Score"],
+          row["Age Group"], row["Training Hours"],
+          row["Club"], row["Region"]
+        ]),
+        pagination: { enabled: true, limit: 10 },
+        sort: true,
+        search: true
+      }).render(document.getElementById("table"));
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      populateFilters();
+      renderTable();
+    });
+  </script>
+</body>
+</html>
