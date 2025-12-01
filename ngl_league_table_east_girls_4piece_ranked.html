@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>NGL National League Table – Girls 4 Piece – East Region</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      margin: 0;
+      padding: 1.5rem;
+      background: #f5f5f7;
+      color: #222;
+    }
+    h1 {
+      margin-top: 0;
+      margin-bottom: 0.25rem;
+      font-size: 1.6rem;
+    }
+    p.subtitle {
+      margin-top: 0;
+      margin-bottom: 1.5rem;
+      color: #555;
+      font-size: 0.95rem;
+    }
+    .filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+    }
+    .filter-group {
+      display: flex;
+      flex-direction: column;
+      font-size: 0.85rem;
+    }
+    .filter-group label {
+      margin-bottom: 0.25rem;
+      color: #555;
+    }
+    select, input[type="text"] {
+      min-width: 140px;
+      padding: 0.35rem 0.5rem;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+      font-size: 0.9rem;
+    }
+    .table-wrapper {
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      overflow: auto;
+      max-height: 1600px;
+    }
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      font-size: 0.9rem;
+      min-width: 840px;
+    }
+    thead {
+      position: sticky;
+      top: 0;
+      background: #222;
+      color: #fff;
+      z-index: 1;
+    }
+    th, td {
+      padding: 0.5rem 0.75rem;
+      text-align: left;
+      border-bottom: 1px solid #eee;
+      white-space: nowrap;
+    }
+    tbody tr:nth-child(even) {
+      background: #fafafa;
+    }
+    tbody tr:hover {
+      background: #f0f4ff;
+    }
+    .no-results {
+      padding: 1rem;
+      text-align: center;
+      color: #777;
+    }
+    @media (max-width: 768px) {
+      body {
+        padding: 0.75rem;
+      }
+      table {
+        font-size: 0.8rem;
+      }
+      select, input[type="text"] {
+        min-width: 120px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>NGL National League Table</h1>
+  <p class="subtitle">Girls 4 Piece – East Region – 30th November 2025</p>
+
+  <div class="filters">
+    <div class="filter-group">
+      <label for="nameFilter">Name</label>
+      <input type="text" id="nameFilter" placeholder="Search name...">
+    </div>
+    <div class="filter-group">
+      <label for="countryFilter">Country</label>
+      <select id="countryFilter"></select>
+    </div>
+    <div class="filter-group">
+      <label for="regionFilter">Region</label>
+      <select id="regionFilter"></select>
+    </div>
+    <div class="filter-group">
+      <label for="clubFilter">Club</label>
+      <select id="clubFilter"></select>
+    </div>
+    <div class="filter-group">
+      <label for="ageFilter">Age Category</label>
+      <select id="ageFilter"></select>
+    </div>
+    <div class="filter-group">
+      <label for="levelFilter">Level</label>
+      <select id="levelFilter"></select>
+    </div>
+    <div class="filter-group">
+      <label for="pieceFilter">Piece</label>
+      <select id="pieceFilter"></select>
+    </div>
+  </div>
+
+  <div class="table-wrapper">
+    <table id="leagueTable">
+      <thead>
+        <tr>
+          <th>Rank</th>
+          <th>Name</th>
+          <th>Country</th>
+          <th>Region</th>
+          <th>Club</th>
+          <th>Age Category</th>
+          <th>Level</th>
+          <th>Piece</th>
+          <th>Personal Best (Final Score)</th>
+        </tr>
+      </thead>
+      <tbody>
+      </tbody>
+    </table>
+    <div id="noResults" class="no-results" style="display:none;">
+      No gymnasts match the selected filters.
+    </div>
+  </div>
+
+  <script>
+    const leagueData = [{"Name": "Ava Cruwys", "Club": "K-Gymnastics (91166)", "Final Score": 12.1, "Age Category": "12-14", "Piece": "Floor", "Level": "A", "Region": "EAST", "Country": "Great Britain"}, {"Name": "Ava Cruwys", "Club": "K-Gymnastics (91166)", "Final Score": 9.4, "Age Category": "12-14", "Piece": "Vault", "Level": "A", "Region": "EAST", "Country": "Great Britain"}, {"Name": "Ava Cruwys", "Club": "K-Gymnastics (91166)", "Final Score": 9.0, "Age Category": "12-14", "Piece": "Uneven", "Level": "A", "Region": "EAST", "Country": "Great Britain"}, {"Name": "Ava Cruwys", "Club": "K-Gymnastics (91166)", "Final Score": 12.1, "Age Category": "12-14", "Piece": "Balance", "Level": "A", "Region": "EAST", "Country": "Great Britain"}, {"Name": "Avika Bhagawati", "Club": "SAADI Gymnastics Ltd (40556)", "Final Score": 11.8, "Age Category": "12-14", "Piece": "Floor", "Level": "B", "Region": "EAST", "Country": "Great Britain"}, {"Name": "Avika Bhagawati", "Club": "SAADI Gymnastics Ltd (40556)", "Final Score": 12.0, "Age Category": "12-14", "Piece": "Vault", "Level": "B", "Region": "EAST", "Country": "Great Britain"}, {"Name": "Avika Bhagawati", "Club": "SAADI Gymnastics Ltd (40556)", "Final Score": 9.5, "Age Category": "12-14", "Piece": "Balance", "Level": "B", "Region": "EAST", "Country": "Great Britain"}, {"Name": "Avika Bhagawati", "Club": "SAADI Gymnastics Ltd (40556)", "Final Score": 7.0, "Age Category": "12-14", "Piece": "Uneven", "Level": "B", "Region": "EAST", "Country": "Great Britain"}, {"Name": "Claire Hardy", "Club": "SAADI Gymnastics Ltd (40556)", "Final Score": 8.8, "Age Category": "12-14", "Piece": "Balance", "Level": "B", "Region": "EAST", "Country": "Great Britain"}, {"Name": "Claire Hardy", "Club": "SAADI Gymnastics Ltd (40556)", "Final Score": 11.5, "Age Category": "12-14", "Piece": "Vault", "Level": "B", "Region": "EAST", "Country": "Great Britain"}, {"Name": "Claire Hardy", "Club": "SAADI Gymnastics Ltd (40556)", "Final Score": 10.2, "Age Category": "12-14", "Piece": "Uneven", "Level": "B", "Region": "EAST", "Country": "Great Britain"}, {"Name": "Claire Hardy", "Club": "SAADI Gymnastics Ltd (40556)", "Final Score": 12.0, "Age Category": "12-14", "Piece": "Floor", "Level": "B", "Region": "EAST", "Country": "Great Britain"}, {"Name": "Cobie Wong", "Club": "SAADI Gymnastics Ltd (40556)", "Final Score": 11.3, "Age Category": "15+", "Piece": "Floor", "Level": "B", "Region": "EAST", "Country": "Great Britain"}, {"Name": "Cobie Wong", "Club": "SAADI Gymnastics Ltd (40556)", "Final Score": 8.7, "Age Category": "15+", "Piece": "Uneven", "Level": "B", "Region": "EAST", "Country": "Great Britain"}, {"Name": "Cobie Wong", "Club": "SAADI Gymnastics Ltd (40556)", "Final Score": 9.6, "Age Category": "15+", "Piece": "Balance", "Level": "B", "Region": "EAST", "Country": "Great Britain"}, {"Name": "Cobie Wong", "Club": "SAADI Gymnastics Ltd (40556)", "Final Score": 11.7, "Age Category": "15+", "Piece": "Vault", "Level": "B", "Region": "EAST", "Country": "Great Britain"}, {"Name": "Daisy-Mai Hall Smallhorne", "Club": "SAADI Gymnastics Ltd (40556)", "Final Score": 10.9, "Age Category": "9-11", "Piece": "Vault", "Level": "B", "Region": "EAST", "Country": "Great Britain"}, {"Name": "Daisy-Mai Hall Smallhorne", "Club": "SAADI Gymnastics Ltd (40556)", "Final Score": 8.2, "Age Category": "9-11", "Piece": "Uneven", "Level": "B", "Region": "EAST", "Country": "Great Britain"}, {"Name": "Daisy-Mai Hall Smallhorne", "Club": "SAADI Gymnastics Ltd (40556)", "Final Score": 8.9, "Age Category": "9-11", "Piece": "Balance", "Level": "B", "Region": "EAST", "Country": "Great Britain"}, {"Name": "Daisy-Mai Hall Smallhorne", "Club": "SAADI Gymnastics Ltd (40556)", "Final Score": 11.2, "Age Category": "9-11", "Piece": "Floor", "Level": "B", "Region": "EAST", "Country": "Great Britain"}, {"Name": "Eli Mahmood", "Club": "SAADI Gymnastics Ltd (40556)", "Final Score": 9.8, "Age Category": "9-11", "Piece": "Vault", "Level": "A", "Region": "EAST", "Country": "Great Britain"}, {"Name": "Eli Mahmood", "Club": "SAADI Gymnastics Ltd (40556)", "Final Score": 11.6, "Age Category": "9-11", "Piece": "Balance", "Level": "A", "Region": "EAST", "Country": "Great Britain"}, {"Name": "Eli Mahmood", "Club": "SAADI Gymnastics Ltd (40556)", "Final Score": 8.7, "Age Category": "9-11", "Piece": "Uneven", "Level": "A", "Region": "EAST", "Country": "Great Britain"}, {"Name": "Eli Mahmood", "Club": "SAADI Gymnastics Ltd (40556)", "Final Score": 11.0, "Age Category": "9-11", "Piece": "Floor", "Level": "A", "Region": "EAST", "Country": "Great Britain"}, {"Name": "Elissia Mai Lowe", "Club": "K-Gymnastics (91166)", "Final Score": 12.0, "Age Category": "9-11", "Piece": "Balance", "Level": "A", "Region": "EAST", "Country": "Great Britain"}, {"Name": "Elissia Mai Lowe", "Club": "K-Gymnastics (91166)", "Final Score": 9.2, "Age Category": "9-11", "Piece": "Vault", "Level": "A", "Region": "EAST", "Country": "Great Britain"}, {"Name": "Elissia Mai Lowe", "Club": "K-Gymnastics (91166)", "Final Score": 9.1, "Age Category": "9-11", "Piece": "Uneven", "Level": "A", "Region": "EAST", "Country": "Great Britain"}, {"Name": "Elissia Mai Lowe", "Club": "K-Gymnastics (91166)", "Final Score": 12.2, "Age Category": "9-11", "Piece": "Floor", "Level": "A", "Region": "EAST", "Country": "Great Britain"}, {"Name": "Emilia Mackie", "Club": "SAADI Gymnastics Ltd (40556)", "Final Score": 10.1, "Age Category": "9-11", "Piece": "Vault", "Level": "A", "Region": "EAST", "Country": "Great Britain"}, {"Name": "Emilia Mackie", "Club": "SAADI Gymnastics Ltd (40556)", "Final Score": 10.7, "Age Category": "9-11", "Piece": "Balance", "Level": "A", "Region": "EAST", "Country": "Great Britain"}, {"Name": "Emilia Mackie", "Club": "SAADI Gymnastics Ltd (40556)", "Final Score": 8.9, "Age Category": "9-11", "Piece": "Uneven", "Level": "A", "Region": "EAST", "Country": "Great Britain"}, {"Name": "Emilia Mackie", "Club": "SAADI Gymnastics Ltd (40556)", "Final Score": 11.1, "Age Category": "9-11", "Piece": "Floor", "Level": "A", "Region": "EAST", "Country": "Great Britain"}, {"Name": "Erin Walsh", "Club": "SAADI Gymnastics Ltd (40556)", "Final Score": 11.7, "Age Category": "9-11", "Piece": "Vault", "Level": "B", "Region": "EAST", "Country": "Great Britain"}, {"Name": "Erin Walsh", "Club": "SAADI Gymnastics Ltd (40556)", "Final Score": 8.1, "Age Category": "9-11", "Piece": "Uneven", "Level": "B", "Region": "EAST", "Country": "Great Britain"}, {"Name": "Erin Walsh", "Club": "SAADI Gymnastics Ltd (40556)", "Final Score": 10.4, "Age Category": "9-11", "Piece": "Floor", "Level": "B", "Region": "EAST", "Country": "Great Britain"}, {"Name": "Erin Walsh", "Club": "SAADI Gymnastics Ltd (40556)", "Final Score": 8.8, "Age Category": "9-11", "Piece": "Balance", "Level": "B", "Region": "EAST", "Country": "Great Britain"}, {"Name": "Eva Lacey", "Club": "SAADI Gymnastics Ltd (40556)", "Final Score": 8.7, "Age Category": "15+", "Piece": "Balance", "Level": "A", "Region": "EAST", "Country": "Great Britain"}, {"Name": "Eva Lacey", "Club": "SAADI Gymnastics Ltd (40556)", "Final Score": 8.8, "Age Category": "15+", "Piece": "Vault", "Level": "A", "Region": "EAST", "Country": "Great Britain"}, {"Name": "Eva Lacey", "Club": "SAADI Gymnastics Ltd (40556)", "Final Score": 6.8, "Age Category": "15+", "Piece": "Floor", "Level": "A", "Region": "EAST", "Country": "Great Britain"}, {"Name": "Eva Lacey", "Club": "SAADI Gymnastics Ltd (40556)", "Final Score": 8.9, "Age Category": "15+", "Piece": "Uneven", "Level": "A", "Region": "EAST", "Country": "Great Britain"}, {"Name": "Florence Dodd", "Club": "K-Gymnastics (91166)", "Final Score": 12.5, "Age Category": "12-14", "Piece": "Floor", "Level": "B", "Region": "EAST", "Country": "Great Britain"}, {"Name": "Florence Dodd", "Club": "K-Gymnastics (91166)", "Final Score": 8.4, "Age Category": "12-14", "Piece": "Uneven", "Level": "B", "Region": "EAST", "Country": "Great Britain"}, {"Name": "Florence Dodd", "Club": "K-Gymnastics (91166)", "Final Score": 10.2, "Age Category": "12-14", "Piece": "Balance", "Level": "B", "Region": "EAST", "Country": "Great Britain"}, {"Name": "Florence Dodd", "Club": "K-Gymnastics (91166)", "Final Score": 10.3, "Age Category": "12-14", "Piece": "Vault", "Level": "B", "Region": "EAST", "Country": "Great Britain"}, {"Name": "Genevieve Hurrell", "Club": "K-Gymnastics (91166)", "Final Score": 8.7, "Age Category": "12-14", "Piece": "Uneven", "Level": "B", "Region": "EAST", "Country": "Great Britain"}, {"Name": "Genevieve Hurrell", "Club": "K-Gymnastics (91166)", "Final Score": 7.7, "Age Category": "12-14", "Piece": "Balance", "Level": "B", "Region": "EAST", "Country": "Great Britain"}, {"Name": "Genevieve Hurrell", "Club": "K-Gymnastics (91166)", "Final Score": 11.8, "Age Category": "12-14", "Piece": "Vault", "Level": "B", "Region": "EAST", "Country": "Great Britain"}, {"Name": "Genevieve Hurrell", "Club": "K-Gymnastics (91166)", "Final Score": 12.2, "Age Category": "12-14", "Piece": "Floor", "Level": "B", "Region": "EAST", "Country": "Great Britain"}, {"Name": "Georgia Lane", "Club": "SAADI Gymnastics Ltd (40556)", "Final Score": 11.0, "Age Category": "12-14", "Piece": "Balance", "Level": "B", "Region": "EAST", "Country": "Great Britain"}, {"Name": "Georgia Lane", "Club": "SAADI Gymnastics Ltd (40556)", "Final Score": 9.4, "Age Category": "12-14", "Piece": "Uneven", "Level": "B", "Region": "EAST", "Country": "Great Britain"}, {"Name": "Georgia Lane", "Club": "SAADI Gymnastics Ltd (40556)", "Final Score": 11.4, "Age Category": "12-14", "Piece": "Vault", "Level": "B", "Region": "EAST", "Country": "Great Britain"}, {"Name": "Georgia Lane", "Club": "SAADI Gymnastics Ltd (40556)", "Final Score": 12.4, "Age Category": "12-14", "Piece": "Floor", "Level": "B", "Region": "EAST", "Country": "Great Britain"}, {"Name": "Grace Hunter", "Club": "SAADI Gymnastics Ltd (40556)", "Final Score": 8.6, "Age Category": "12-14", "Piece": "Uneven", "Level": "B", "Region": "EAST", "Country": "Great Britain"}, {"Name": "Grace Hunter", "Club": "SAADI Gymnastics Ltd (40556)", "Final Score": 11.5, "Age Category": "12-14", "Piece": "Vault", "Level": "B", "Region": "EAST", "Country": "Great Britain"}, {"Name": "Grace Hunter", "Club": "SAADI Gymnastics Ltd (40556)", "Final Score": 12.0, "Age Category": "12-14", "Piece": "Floor", "Level": "B", "Region": "EAST", "Country": "Great Britain"}, {"Name": "Grace Hunter", "Club": "SAADI Gymnastics Ltd (40556)", "Final Score": 10.3, "Age Category": "12-14", "Piece": "Balance", "Level": "B", "Region": "EAST", "Country": "Great Britain"}, {"Name": "Gracie Lowe", "Club": "K-Gymnastics (91166)", "Final Score": 9.4, "Age Category": "9-11", "Piece": "Uneven", "Level": "A", "Region": "EAST", "Country": "Great Britain"}, {"Name": "Gracie Lowe", "Club": "K-Gymnastics (91166)", "Final Score": 9.4, "Age Category": "9-11", "Piece": "Vault", "Level": "A", "Region": "EAST", "Country": "Great Britain"}, {"Name": "Gracie Lowe", "Club": "K-Gymnastics (91166)", "Final Score": 11.3, "Age Category": "9-11", "Piece": "Balance", "Level": "A", "Region": "EAST", "Country": "Great Britain"}, {"Name": "Gracie Lowe", "Club": "K-Gymnastics (91166)", "Final Score": 11.7, "Age Category": "9-11", "Piece": "Floor", "Level": "A", "Region": "EAST", "Country": "Great Britain"}, {"Name": "Imogen Edmunds", "Club": "SAADI Gymnastics Ltd (40556)", "Final Score": 12.1, "Age Category": "9-11", "Piece": "Floor", "Level": "A", "Region": "EAST", "Country": "Great Britain"}, {"Name": "Imogen Edmunds", "Club": "SAADI Gymnastics Ltd (40556)", "Final Score": 10.4, "Age Category": "9-11", "Piece": "Vault", "Level": "A", "Region": "EAST", "Country": "Great Britain"}, {"Name": "Imogen Edmunds", "Club": "SAADI Gymnastics Ltd (40556)", "Final Score": 8.2, "Age Category": "9-11", "Piece": "Uneven", "Level": "A", "Region": "EAST", "Country": "Great Britain"}, {"Name": "Imogen Edmunds", "Club": "SAADI Gymnastics Ltd (40556)", "Final Score": 11.3, "Age Category": "9-11", "Piece": "Balance", "Level": "A", "Region": "EAST", "Country": "Great Britain"}, {"Name": "Isabella Movsessian", "Club": "SAADI Gymnastics Ltd (40556)", "Final Score": 9.4, "Age Category": "9-11", "Piece": "Vault", "Level": "A", "Region": "EAST", "Country": "Great Britain"}, {"Name": "Isabella Movsessian", "Club": "SAADI Gymnastics Ltd (40556)", "Final Score": 11.3, "Age Category": "9-11", "Piece": "Floor", "Level": "A", "Region": "EAST", "Country": "Great Britain"}, {"Name": "Isabella Movsessian", "Club": "SAADI Gymnastics Ltd (40556)", "Final Score": 8.3, "Age Category": "9-11", "Piece": "Uneven", "Level": "A", "Region": "EAST", "Country": "Great Britain"}, {"Name": "Isabella Movsessian", "Club": "SAADI Gymnastics Ltd (40556)", "Final Score": 10.9, "Age Category": "9-11", "Piece": "Balance", "Level": "A", "Region": "EAST", "Country": "Great Britain"}, {"Name": "Isla Miles", "Club": "K-Gymnastics (91166)", "Final Score": 11.7, "Age Category": "12-14", "Piece": "Vault", "Level": "B", "Region": "EAST", "Country": "Great Britain"}, {"Name": "Isla Miles", "Club": "K-Gymnastics (91166)", "Final Score": 8.8, "Age Category": "12-14", "Piece": "Balance", "Level": "B", "Region": "EAST", "Country": "Great Britain"}, {"Name": "Isla Miles", "Club": "K-Gymnastics (91166)", "Final Score": 10.0, "Age Category": "12-14", "Piece": "Uneven", "Level": "B", "Region": "EAST", "Country": "Great Britain"}, {"Name": "Isla Miles", "Club": "K-Gymnastics (91166)", "Final Score": 12.6, "Age Category": "12-14", "Piece": "Floor", "Level": "B", "Region": "EAST", "Country": "Great Britain"}, {"Name": "Josephine Davis", "Club": "SAADI Gymnastics Ltd (40556)", "Final Score": 8.7, "Age Category": "12-14", "Piece": "Uneven", "Level": "A", "Region": "EAST", "Country": "Great Britain"}, {"Name": "Josephine Davis", "Club": "SAADI Gymnastics Ltd (40556)", "Final Score": 9.3, "Age Category": "12-14", "Piece": "Balance", "Level": "A", "Region": "EAST", "Country": "Great Britain"}, {"Name": "Josephine Davis", "Club": "SAADI Gymnastics Ltd (40556)", "Final Score": 10.9, "Age Category": "12-14", "Piece": "Vault", "Level": "A", "Region": "EAST", "Country": "Great Britain"}, {"Name": "Josephine Davis", "Club": "SAADI Gymnastics Ltd (40556)", "Final Score": 11.2, "Age Category": "12-14", "Piece": "Floor", "Level": "A", "Region": "EAST", "Country": "Great Britain"}, {"Name": "Juliette Edmunds", "Club": "SAADI Gymnastics Ltd (40556)", "Final Score": 10.7, "Age Category": "12-14", "Piece": "Balance", "Level": "B", "Region": "EAST", "Country": "Great Britain"}, {"Name": "Juliette Edmunds", "Club": "SAADI Gymnastics Ltd (40556)", "Final Score": 7.9, "Age Category": "12-14", "Piece": "Uneven", "Level": "B", "Region": "EAST", "Country": "Great Britain"}, {"Name": "Juliette Edmunds", "Club": "SAADI Gymnastics Ltd (40556)", "Final Score": 11.5, "Age Category": "12-14", "Piece": "Floor", "Level": "B", "Region": "EAST", "Country": "Great Britain"}, {"Name": "Juliette Edmunds", "Club": "SAADI Gymnastics Ltd (40556)", "Final Score": 11.4, "Age Category": "12-14", "Piece": "Vault", "Level": "B", "Region": "EAST", "Country": "Great Britain"}, {"Name": "Leila Shorrock", "Club": "SAADI Gymnastics Ltd (40556)", "Final Score": 11.2, "Age Category": "12-14", "Piece": "Balance", "Level": "A", "Region": "EAST", "Country": "Great Britain"}, {"Name": "Leila Shorrock", "Club": "SAADI Gymnastics Ltd (40556)", "Final Score": 8.2, "Age Category": "12-14", "Piece": "Vault", "Level": "A", "Region": "EAST", "Country": "Great Britain"}, {"Name": "Leila Shorrock", "Club": "SAADI Gymnastics Ltd (40556)", "Final Score": 11.5, "Age Category": "12-14", "Piece": "Floor", "Level": "A", "Region": "EAST", "Country": "Great Britain"}, {"Name": "Leila Shorrock", "Club": "SAADI Gymnastics Ltd (40556)", "Final Score": 8.8, "Age Category": "12-14", "Piece": "Uneven", "Level": "A", "Region": "EAST", "Country": "Great Britain"}, {"Name": "Macey Ready", "Club": "K-Gymnastics (91166)", "Final Score": 10.5, "Age Category": "12-14", "Piece": "Balance", "Level": "B", "Region": "EAST", "Country": "Great Britain"}, {"Name": "Macey Ready", "Club": "K-Gymnastics (91166)", "Final Score": 11.8, "Age Category": "12-14", "Piece": "Vault", "Level": "B", "Region": "EAST", "Country": "Great Britain"}, {"Name": "Macey Ready", "Club": "K-Gymnastics (91166)", "Final Score": 13.1, "Age Category": "12-14", "Piece": "Floor", "Level": "B", "Region": "EAST", "Country": "Great Britain"}, {"Name": "Macey Ready", "Club": "K-Gymnastics (91166)", "Final Score": 10.6, "Age Category": "12-14", "Piece": "Uneven", "Level": "B", "Region": "EAST", "Country": "Great Britain"}, {"Name": "Maisie Callister", "Club": "SAADI Gymnastics Ltd (40556)", "Final Score": 6.9, "Age Category": "12-14", "Piece": "Uneven", "Level": "A", "Region": "EAST", "Country": "Great Britain"}, {"Name": "Maisie Callister", "Club": "SAADI Gymnastics Ltd (40556)", "Final Score": 8.6, "Age Category": "12-14", "Piece": "Vault", "Level": "A", "Region": "EAST", "Country": "Great Britain"}, {"Name": "Maisie Callister", "Club": "SAADI Gymnastics Ltd (40556)", "Final Score": 7.4, "Age Category": "12-14", "Piece": "Balance", "Level": "A", "Region": "EAST", "Country": "Great Britain"}, {"Name": "Maisie Callister", "Club": "SAADI Gymnastics Ltd (40556)", "Final Score": 6.7, "Age Category": "12-14", "Piece": "Floor", "Level": "A", "Region": "EAST", "Country": "Great Britain"}, {"Name": "Maisie Fowler", "Club": "K-Gymnastics (91166)", "Final Score": 12.3, "Age Category": "15+", "Piece": "Floor", "Level": "B", "Region": "EAST", "Country": "Great Britain"}, {"Name": "Maisie Fowler", "Club": "K-Gymnastics (91166)", "Final Score": 8.5, "Age Category": "15+", "Piece": "Uneven", "Level": "B", "Region": "EAST", "Country": "Great Britain"}, {"Name": "Maisie Fowler", "Club": "K-Gymnastics (91166)", "Final Score": 10.4, "Age Category": "15+", "Piece": "Vault", "Level": "B", "Region": "EAST", "Country": "Great Britain"}, {"Name": "Maisie Fowler", "Club": "K-Gymnastics (91166)", "Final Score": 7.2, "Age Category": "15+", "Piece": "Balance", "Level": "B", "Region": "EAST", "Country": "Great Britain"}, {"Name": "Maylie Prunier Singh", "Club": "K-Gymnastics (91166)", "Final Score": 11.9, "Age Category": "9-11", "Piece": "Balance", "Level": "A", "Region": "EAST", "Country": "Great Britain"}, {"Name": "Maylie Prunier Singh", "Club": "K-Gymnastics (91166)", "Final Score": 10.4, "Age Category": "9-11", "Piece": "Vault", "Level": "A", "Region": "EAST", "Country": "Great Britain"}, {"Name": "Maylie Prunier Singh", "Club": "K-Gymnastics (91166)", "Final Score": 9.9, "Age Category": "9-11", "Piece": "Uneven", "Level": "A", "Region": "EAST", "Country": "Great Britain"}, {"Name": "Maylie Prunier Singh", "Club": "K-Gymnastics (91166)", "Final Score": 12.5, "Age Category": "9-11", "Piece": "Floor", "Level": "A", "Region": "EAST", "Country": "Great Britain"}, {"Name": "Mila Gudino", "Club": "SAADI Gymnastics Ltd (40556)", "Final Score": 9.9, "Age Category": "12-14", "Piece": "Uneven", "Level": "B", "Region": "EAST", "Country": "Great Britain"}, {"Name": "Mila Gudino", "Club": "SAADI Gymnastics Ltd (40556)", "Final Score": 11.4, "Age Category": "12-14", "Piece": "Vault", "Level": "B", "Region": "EAST", "Country": "Great Britain"}, {"Name": "Mila Gudino", "Club": "SAADI Gymnastics Ltd (40556)", "Final Score": 8.2, "Age Category": "12-14", "Piece": "Balance", "Level": "B", "Region": "EAST", "Country": "Great Britain"}, {"Name": "Mila Gudino", "Club": "SAADI Gymnastics Ltd (40556)", "Final Score": 11.3, "Age Category": "12-14", "Piece": "Floor", "Level": "B", "Region": "EAST", "Country": "Great Britain"}, {"Name": "Nylah-Rai Phillips", "Club": "K-Gymnastics (91166)", "Final Score": 10.5, "Age Category": "9-11", "Piece": "Vault", "Level": "A", "Region": "EAST", "Country": "Great Britain"}, {"Name": "Nylah-Rai Phillips", "Club": "K-Gymnastics (91166)", "Final Score": 12.0, "Age Category": "9-11", "Piece": "Floor", "Level": "A", "Region": "EAST", "Country": "Great Britain"}, {"Name": "Nylah-Rai Phillips", "Club": "K-Gymnastics (91166)", "Final Score": 11.5, "Age Category": "9-11", "Piece": "Balance", "Level": "A", "Region": "EAST", "Country": "Great Britain"}, {"Name": "Nylah-Rai Phillips", "Club": "K-Gymnastics (91166)", "Final Score": 8.6, "Age Category": "9-11", "Piece": "Uneven", "Level": "A", "Region": "EAST", "Country": "Great Britain"}, {"Name": "Phoebe Davies", "Club": "SAADI Gymnastics Ltd (40556)", "Final Score": 10.8, "Age Category": "12-14", "Piece": "Floor", "Level": "B", "Region": "EAST", "Country": "Great Britain"}, {"Name": "Phoebe Davies", "Club": "SAADI Gymnastics Ltd (40556)", "Final Score": 9.0, "Age Category": "12-14", "Piece": "Uneven", "Level": "B", "Region": "EAST", "Country": "Great Britain"}, {"Name": "Phoebe Davies", "Club": "SAADI Gymnastics Ltd (40556)", "Final Score": 10.9, "Age Category": "12-14", "Piece": "Vault", "Level": "B", "Region": "EAST", "Country": "Great Britain"}, {"Name": "Phoebe Davies", "Club": "SAADI Gymnastics Ltd (40556)", "Final Score": 8.9, "Age Category": "12-14", "Piece": "Balance", "Level": "B", "Region": "EAST", "Country": "Great Britain"}, {"Name": "Poppy Osborn", "Club": "K-Gymnastics (91166)", "Final Score": 9.4, "Age Category": "12-14", "Piece": "Vault", "Level": "A", "Region": "EAST", "Country": "Great Britain"}, {"Name": "Poppy Osborn", "Club": "K-Gymnastics (91166)", "Final Score": 9.2, "Age Category": "12-14", "Piece": "Uneven", "Level": "A", "Region": "EAST", "Country": "Great Britain"}, {"Name": "Poppy Osborn", "Club": "K-Gymnastics (91166)", "Final Score": 11.5, "Age Category": "12-14", "Piece": "Balance", "Level": "A", "Region": "EAST", "Country": "Great Britain"}, {"Name": "Poppy Osborn", "Club": "K-Gymnastics (91166)", "Final Score": 12.2, "Age Category": "12-14", "Piece": "Floor", "Level": "A", "Region": "EAST", "Country": "Great Britain"}, {"Name": "Rosa Martorell", "Club": "SAADI Gymnastics Ltd (40556)", "Final Score": 11.4, "Age Category": "9-11", "Piece": "Floor", "Level": "A", "Region": "EAST", "Country": "Great Britain"}, {"Name": "Rosa Martorell", "Club": "SAADI Gymnastics Ltd (40556)", "Final Score": 9.0, "Age Category": "9-11", "Piece": "Uneven", "Level": "A", "Region": "EAST", "Country": "Great Britain"}, {"Name": "Rosa Martorell", "Club": "SAADI Gymnastics Ltd (40556)", "Final Score": 11.6, "Age Category": "9-11", "Piece": "Balance", "Level": "A", "Region": "EAST", "Country": "Great Britain"}, {"Name": "Rosa Martorell", "Club": "SAADI Gymnastics Ltd (40556)", "Final Score": 9.4, "Age Category": "9-11", "Piece": "Vault", "Level": "A", "Region": "EAST", "Country": "Great Britain"}, {"Name": "Seraphina Dodd", "Club": "K-Gymnastics (91166)", "Final Score": 9.2, "Age Category": "9-11", "Piece": "Uneven", "Level": "A", "Region": "EAST", "Country": "Great Britain"}, {"Name": "Seraphina Dodd", "Club": "K-Gymnastics (91166)", "Final Score": 11.9, "Age Category": "9-11", "Piece": "Floor", "Level": "A", "Region": "EAST", "Country": "Great Britain"}, {"Name": "Seraphina Dodd", "Club": "K-Gymnastics (91166)", "Final Score": 11.8, "Age Category": "9-11", "Piece": "Balance", "Level": "A", "Region": "EAST", "Country": "Great Britain"}, {"Name": "Seraphina Dodd", "Club": "K-Gymnastics (91166)", "Final Score": 9.0, "Age Category": "9-11", "Piece": "Vault", "Level": "A", "Region": "EAST", "Country": "Great Britain"}, {"Name": "Sophia Butt", "Club": "SAADI Gymnastics Ltd (40556)", "Final Score": 9.0, "Age Category": "9-11", "Piece": "Uneven", "Level": "B", "Region": "EAST", "Country": "Great Britain"}, {"Name": "Sophia Butt", "Club": "SAADI Gymnastics Ltd (40556)", "Final Score": 10.8, "Age Category": "12-14", "Piece": "Vault", "Level": "B", "Region": "EAST", "Country": "Great Britain"}, {"Name": "Sophia Butt", "Club": "SAADI Gymnastics Ltd (40556)", "Final Score": 8.8, "Age Category": "12-14", "Piece": "Floor", "Level": "B", "Region": "EAST", "Country": "Great Britain"}, {"Name": "Sophia Butt", "Club": "SAADI Gymnastics Ltd (40556)", "Final Score": 7.4, "Age Category": "12-14", "Piece": "Balance", "Level": "B", "Region": "EAST", "Country": "Great Britain"}, {"Name": "Violet Gill", "Club": "SAADI Gymnastics Ltd (40556)", "Final Score": 9.7, "Age Category": "12-14", "Piece": "Floor", "Level": "A", "Region": "EAST", "Country": "Great Britain"}, {"Name": "Violet Gill", "Club": "SAADI Gymnastics Ltd (40556)", "Final Score": 0.0, "Age Category": "12-14", "Piece": "Uneven", "Level": "A", "Region": "EAST", "Country": "Great Britain"}, {"Name": "Violet Gill", "Club": "SAADI Gymnastics Ltd (40556)", "Final Score": 10.0, "Age Category": "12-14", "Piece": "Vault", "Level": "A", "Region": "EAST", "Country": "Great Britain"}, {"Name": "Violet Gill", "Club": "SAADI Gymnastics Ltd (40556)", "Final Score": 9.9, "Age Category": "12-14", "Piece": "Balance", "Level": "A", "Region": "EAST", "Country": "Great Britain"}];
+
+    function getUniqueValues(data, key) {
+      const set = new Set();
+      data.forEach(row => {
+        if (row[key] !== undefined && row[key] !== null && row[key] !== "") {
+          set.add(String(row[key]));
+        }
+      });
+      return Array.from(set).sort((a,b) => a.localeCompare(b, undefined, {numeric:true}));
+    }
+
+    function populateSelect(selectId, values, includeAll=true) {
+      const select = document.getElementById(selectId);
+      select.innerHTML = "";
+      if (includeAll) {
+        const optAll = document.createElement("option");
+        optAll.value = "";
+        optAll.textContent = "All";
+        select.appendChild(optAll);
+      }
+      values.forEach(v => {
+        const opt = document.createElement("option");
+        opt.value = v;
+        opt.textContent = v;
+        select.appendChild(opt);
+      });
+    }
+
+    function populateFilters() {
+      populateSelect("countryFilter", getUniqueValues(leagueData, "Country"));
+      populateSelect("regionFilter", getUniqueValues(leagueData, "Region"));
+      populateSelect("clubFilter", getUniqueValues(leagueData, "Club"));
+      populateSelect("ageFilter", getUniqueValues(leagueData, "Age Category"));
+      populateSelect("levelFilter", getUniqueValues(leagueData, "Level"));
+      populateSelect("pieceFilter", getUniqueValues(leagueData, "Piece"));
+    }
+
+    function applyFilters() {
+      const nameVal = document.getElementById("nameFilter").value.trim().toLowerCase();
+      const countryVal = document.getElementById("countryFilter").value;
+      const regionVal = document.getElementById("regionFilter").value;
+      const clubVal = document.getElementById("clubFilter").value;
+      const ageVal = document.getElementById("ageFilter").value;
+      const levelVal = document.getElementById("levelFilter").value;
+      const pieceVal = document.getElementById("pieceFilter").value;
+
+      let filtered = leagueData.filter(row => {
+        if (nameVal && !String(row["Name"]).toLowerCase().includes(nameVal)) return false;
+        if (countryVal && String(row["Country"]) !== countryVal) return false;
+        if (regionVal && String(row["Region"]) !== regionVal) return false;
+        if (clubVal && String(row["Club"]) !== clubVal) return false;
+        if (ageVal && String(row["Age Category"]) !== ageVal) return false;
+        if (levelVal && String(row["Level"]) !== levelVal) return false;
+        if (pieceVal && String(row["Piece"]) !== pieceVal) return false;
+        return true;
+      });
+
+      // Always order by Final Score (Personal Best) descending
+      filtered.sort((a, b) => {
+        let av = parseFloat(a["Final Score"]);
+        let bv = parseFloat(b["Final Score"]);
+        if (isNaN(av)) av = -Infinity;
+        if (isNaN(bv)) bv = -Infinity;
+        return bv - av;
+      });
+
+      renderTable(filtered);
+    }
+
+    function renderTable(rows) {
+      const tbody = document.querySelector("#leagueTable tbody");
+      const noResults = document.getElementById("noResults");
+      tbody.innerHTML = "";
+
+      if (!rows.length) {
+        noResults.style.display = "block";
+        return;
+      } else {
+        noResults.style.display = "none";
+      }
+
+      rows.forEach((row, index) => {
+        const tr = document.createElement("tr");
+        const cells = [
+          index + 1,
+          row["Name"],
+          row["Country"],
+          row["Region"],
+          row["Club"],
+          row["Age Category"],
+          row["Level"],
+          row["Piece"],
+          row["Final Score"]
+        ];
+        cells.forEach(val => {
+          const td = document.createElement("td");
+          td.textContent = val;
+          tr.appendChild(td);
+        });
+        tbody.appendChild(tr);
+      });
+    }
+
+    function setupFilterListeners() {
+      document.getElementById("nameFilter").addEventListener("input", applyFilters);
+      ["countryFilter","regionFilter","clubFilter","ageFilter","levelFilter","pieceFilter"]
+        .forEach(id => {
+          document.getElementById(id).addEventListener("change", applyFilters);
+        });
+    }
+
+    window.addEventListener("DOMContentLoaded", () => {
+      populateFilters();
+      setupFilterListeners();
+      applyFilters();
+    });
+  </script>
+</body>
+</html>
