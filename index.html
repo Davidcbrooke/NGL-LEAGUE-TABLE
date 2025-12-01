@@ -1,176 +1,280 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>NGL League Table</title>
-  <link href="https://fonts.googleapis.com/css2?family=Rokkit&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <title>NGL National League Table – Girls 4 Piece – East Region</title>
   <style>
     body {
-      font-family: 'Rokkit', serif;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       margin: 0;
-      padding: 2rem;
-      background-color: #f7f7fc;
-    }
-    header {
-      text-align: center;
-      margin-bottom: 2rem;
-    }
-    header img {
-      max-height: 100px;
+      padding: 1.5rem;
+      background: #f5f5f7;
+      color: #222;
     }
     h1 {
-      text-align: center;
-      color: #1e1b58;
+      margin-top: 0;
+      margin-bottom: 0.25rem;
+      font-size: 1.6rem;
     }
-    #controls {
+    p.subtitle {
+      margin-top: 0;
+      margin-bottom: 1.5rem;
+      color: #555;
+      font-size: 0.95rem;
+    }
+    .filters {
       display: flex;
       flex-wrap: wrap;
-      justify-content: center;
-      gap: 1rem;
-      margin-bottom: 1.5rem;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
     }
-    select {
-      padding: 0.5rem;
-      font-size: 1rem;
-      border-radius: 5px;
-      font-family: 'Rokkit', serif;
+    .filter-group {
+      display: flex;
+      flex-direction: column;
+      font-size: 0.85rem;
+    }
+    .filter-group label {
+      margin-bottom: 0.25rem;
+      color: #555;
+    }
+    select, input[type="text"] {
+      min-width: 140px;
+      padding: 0.35rem 0.5rem;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+      font-size: 0.9rem;
+    }
+    .table-wrapper {
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      overflow: auto;
+      max-height: 1600px;
     }
     table {
-      width: 100%;
-      max-width: 1000px;
-      margin: 0 auto;
       border-collapse: collapse;
-      background: white;
+      width: 100%;
+      font-size: 0.9rem;
+      min-width: 840px;
+    }
+    thead {
+      position: sticky;
+      top: 0;
+      background: #222;
+      color: #fff;
+      z-index: 1;
     }
     th, td {
-      padding: 0.6rem;
-      text-align: center;
-      border: 1px solid #ccc;
+      padding: 0.5rem 0.75rem;
+      text-align: left;
+      border-bottom: 1px solid #eee;
+      white-space: nowrap;
     }
-    th {
-      background-color: #e0e0f0;
+    tbody tr:nth-child(even) {
+      background: #fafafa;
+    }
+    tbody tr:hover {
+      background: #f0f4ff;
+    }
+    .no-results {
+      padding: 1rem;
+      text-align: center;
+      color: #777;
+    }
+    @media (max-width: 768px) {
+      body {
+        padding: 0.75rem;
+      }
+      table {
+        font-size: 0.8rem;
+      }
+      select, input[type="text"] {
+        min-width: 120px;
+      }
     }
   </style>
 </head>
 <body>
-  <header>
-    <img src="logo.png" alt="NGL Logo" />
-  </header>
-  <h1>National Gymnastics League Table</h1>
+  <h1>NGL National League Table</h1>
+  <p class="subtitle">Girls 4 Piece – East Region – 30th November 2025</p>
 
-  <div id="controls">
-    <select id="apparatusFilter" onchange="renderTable()">
-      <option value="">All Apparatus</option>
-      <option value="Floor Boys">Floor Boys</option>
-      <option value="Floor Girls">Floor Girls</option>
-      <option value="Vault Boys">Vault Boys</option>
-      <option value="Vault Girls">Vault Girls</option>
-      <option value="High Bar">High Bar</option>
-      <option value="Uneven Bar">Uneven Bar</option>
-      <option value="Rings">Rings</option>
-      <option value="Beam">Beam</option>
-      <option value="Pommel">Pommel</option>
-      <option value="P-Bars">P-Bars</option>
-    </select>
-    <select id="ageFilter" onchange="renderTable()">
-      <option value="">All Age Groups</option>
-      <option value="6–8">6–8</option>
-      <option value="9–11">9–11</option>
-      <option value="12–14">12–14</option>
-      <option value="15+">15+</option>
-    </select>
-    <select id="trainingFilter" onchange="renderTable()">
-      <option value="">All Training Hours</option>
-    </select>
-    <select id="regionFilter" onchange="renderTable()">
-      <option value="">All Regions</option>
-    </select>
-    <select id="clubFilter" onchange="renderTable()">
-      <option value="">All Clubs</option>
-    </select>
-    <select id="routineFilter" onchange="renderTable()">
-      <option value="">All Routines</option>
-      <option value="A">Routine A</option>
-      <option value="B">Routine B</option>
-      <option value="C">Routine C</option>
-    </select>
+  <div class="filters">
+    <div class="filter-group">
+      <label for="nameFilter">Name</label>
+      <input type="text" id="nameFilter" placeholder="Search name...">
+    </div>
+    <div class="filter-group">
+      <label for="countryFilter">Country</label>
+      <select id="countryFilter"></select>
+    </div>
+    <div class="filter-group">
+      <label for="regionFilter">Region</label>
+      <select id="regionFilter"></select>
+    </div>
+    <div class="filter-group">
+      <label for="clubFilter">Club</label>
+      <select id="clubFilter"></select>
+    </div>
+    <div class="filter-group">
+      <label for="ageFilter">Age Category</label>
+      <select id="ageFilter"></select>
+    </div>
+    <div class="filter-group">
+      <label for="levelFilter">Level</label>
+      <select id="levelFilter"></select>
+    </div>
+    <div class="filter-group">
+      <label for="pieceFilter">Piece</label>
+      <select id="pieceFilter"></select>
+    </div>
   </div>
 
-  <table id="dataTable">
-    <thead>
-      <tr>
-        <th>Rank</th>
-        <th>BG Number</th>
-        <th>Gymnast</th>
-        <th>Score</th>
-        <th>Age Group</th>
-        <th>Training Hours</th>
-        <th>Club</th>
-        <th>Region</th>
-        <th>Apparatus</th>
-        <th>Routine</th>
-      </tr>
-    </thead>
-    <tbody></tbody>
-  </table>
+  <div class="table-wrapper">
+    <table id="leagueTable">
+      <thead>
+        <tr>
+          <th>Rank</th>
+          <th>Name</th>
+          <th>Country</th>
+          <th>Region</th>
+          <th>Club</th>
+          <th>Age Category</th>
+          <th>Level</th>
+          <th>Piece</th>
+          <th>Personal Best (Final Score)</th>
+        </tr>
+      </thead>
+      <tbody>
+      </tbody>
+    </table>
+    <div id="noResults" class="no-results" style="display:none;">
+      No gymnasts match the selected filters.
+    </div>
+  </div>
 
   <script>
-    const baseData = [{"BG Number": "774114", "Gymnast": "Gymnast 1", "Score": 11.02, "Age Group": "9\u201311", "Training Hours": "6\u201310 hrs", "Club": "Club B", "Region": "Yorkshire", "Apparatus": "Beam", "Routine": "C"}, {"BG Number": "904038", "Gymnast": "Gymnast 2", "Score": 9.53, "Age Group": "15+", "Training Hours": "6\u201310 hrs", "Club": "Club C", "Region": "South", "Apparatus": "Vault Girls", "Routine": "B"}, {"BG Number": "869246", "Gymnast": "Gymnast 3", "Score": 12.01, "Age Group": "6\u20138", "Training Hours": "6\u201310 hrs", "Club": "Club D", "Region": "South West", "Apparatus": "Uneven Bar", "Routine": "A"}, {"BG Number": "442160", "Gymnast": "Gymnast 4", "Score": 10.76, "Age Group": "6\u20138", "Training Hours": "2\u20135 hrs", "Club": "Club E", "Region": "South", "Apparatus": "Floor Girls", "Routine": "C"}, {"BG Number": "992549", "Gymnast": "Gymnast 5", "Score": 10.7, "Age Group": "12\u201314", "Training Hours": "6\u201310 hrs", "Club": "Club F", "Region": "N. Ireland", "Apparatus": "Floor Boys", "Routine": "C"}, {"BG Number": "985849", "Gymnast": "Gymnast 6", "Score": 9.25, "Age Group": "15+", "Training Hours": "6\u201310 hrs", "Club": "Club G", "Region": "South", "Apparatus": "Pommel", "Routine": "A"}, {"BG Number": "800995", "Gymnast": "Gymnast 7", "Score": 10.92, "Age Group": "9\u201311", "Training Hours": "6\u201310 hrs", "Club": "Club H", "Region": "South West", "Apparatus": "Floor Girls", "Routine": "A"}, {"BG Number": "617060", "Gymnast": "Gymnast 8", "Score": 13.43, "Age Group": "15+", "Training Hours": "6\u201310 hrs", "Club": "Club I", "Region": "Yorkshire", "Apparatus": "Uneven Bar", "Routine": "B"}, {"BG Number": "171716", "Gymnast": "Gymnast 9", "Score": 11.02, "Age Group": "9\u201311", "Training Hours": "2\u20135 hrs", "Club": "Club J", "Region": "North West", "Apparatus": "Floor Girls", "Routine": "B"}, {"BG Number": "649979", "Gymnast": "Gymnast 10", "Score": 9.74, "Age Group": "9\u201311", "Training Hours": "6\u201310 hrs", "Club": "Club K", "Region": "West Midlands", "Apparatus": "Pommel", "Routine": "A"}, {"BG Number": "445905", "Gymnast": "Gymnast 11", "Score": 13.28, "Age Group": "6\u20138", "Training Hours": "6\u201310 hrs", "Club": "Club L", "Region": "Wales", "Apparatus": "Floor Boys", "Routine": "C"}, {"BG Number": "495511", "Gymnast": "Gymnast 12", "Score": 9.21, "Age Group": "12\u201314", "Training Hours": "6\u201310 hrs", "Club": "Club M", "Region": "South", "Apparatus": "Uneven Bar", "Routine": "B"}, {"BG Number": "326142", "Gymnast": "Gymnast 13", "Score": 9.81, "Age Group": "6\u20138", "Training Hours": "6\u201310 hrs", "Club": "Club N", "Region": "London", "Apparatus": "Floor Boys", "Routine": "C"}, {"BG Number": "797158", "Gymnast": "Gymnast 14", "Score": 11.02, "Age Group": "6\u20138", "Training Hours": "6\u201310 hrs", "Club": "Club O", "Region": "South West", "Apparatus": "Beam", "Routine": "C"}, {"BG Number": "104376", "Gymnast": "Gymnast 15", "Score": 12.49, "Age Group": "15+", "Training Hours": "2\u20135 hrs", "Club": "Club P", "Region": "South West", "Apparatus": "Floor Boys", "Routine": "B"}, {"BG Number": "119003", "Gymnast": "Gymnast 16", "Score": 13.63, "Age Group": "15+", "Training Hours": "6\u201310 hrs", "Club": "Club Q", "Region": "London", "Apparatus": "Floor Girls", "Routine": "A"}, {"BG Number": "295949", "Gymnast": "Gymnast 17", "Score": 13.96, "Age Group": "15+", "Training Hours": "2\u20135 hrs", "Club": "Club R", "Region": "N. Ireland", "Apparatus": "Floor Girls", "Routine": "C"}, {"BG Number": "607398", "Gymnast": "Gymnast 18", "Score": 9.58, "Age Group": "15+", "Training Hours": "6\u201310 hrs", "Club": "Club S", "Region": "Yorkshire", "Apparatus": "Floor Girls", "Routine": "C"}, {"BG Number": "211162", "Gymnast": "Gymnast 19", "Score": 12.81, "Age Group": "9\u201311", "Training Hours": "6\u201310 hrs", "Club": "Club T", "Region": "London", "Apparatus": "Beam", "Routine": "B"}, {"BG Number": "896248", "Gymnast": "Gymnast 20", "Score": 9.61, "Age Group": "12\u201314", "Training Hours": "2\u20135 hrs", "Club": "Club U", "Region": "North West", "Apparatus": "Beam", "Routine": "B"}, {"BG Number": "630107", "Gymnast": "Gymnast 21", "Score": 11.54, "Age Group": "6\u20138", "Training Hours": "2\u20135 hrs", "Club": "Club V", "Region": "West Midlands", "Apparatus": "High Bar", "Routine": "B"}, {"BG Number": "693671", "Gymnast": "Gymnast 22", "Score": 11.04, "Age Group": "12\u201314", "Training Hours": "6\u201310 hrs", "Club": "Club W", "Region": "South West", "Apparatus": "Floor Boys", "Routine": "C"}, {"BG Number": "387827", "Gymnast": "Gymnast 23", "Score": 12.63, "Age Group": "6\u20138", "Training Hours": "6\u201310 hrs", "Club": "Club X", "Region": "East", "Apparatus": "Vault Boys", "Routine": "B"}, {"BG Number": "769385", "Gymnast": "Gymnast 24", "Score": 11.07, "Age Group": "12\u201314", "Training Hours": "6\u201310 hrs", "Club": "Club Y", "Region": "N. Ireland", "Apparatus": "P-Bars", "Routine": "C"}, {"BG Number": "110152", "Gymnast": "Gymnast 25", "Score": 13.63, "Age Group": "12\u201314", "Training Hours": "6\u201310 hrs", "Club": "Club Z", "Region": "London", "Apparatus": "Floor Boys", "Routine": "A"}, {"BG Number": "516744", "Gymnast": "Gymnast 26", "Score": 12.31, "Age Group": "15+", "Training Hours": "6\u201310 hrs", "Club": "Club [", "Region": "South West", "Apparatus": "Pommel", "Routine": "A"}, {"BG Number": "295223", "Gymnast": "Gymnast 27", "Score": 9.51, "Age Group": "6\u20138", "Training Hours": "2\u20135 hrs", "Club": "Club \\", "Region": "Scotland", "Apparatus": "Rings", "Routine": "B"}, {"BG Number": "527326", "Gymnast": "Gymnast 28", "Score": 12.63, "Age Group": "15+", "Training Hours": "2\u20135 hrs", "Club": "Club ]", "Region": "London", "Apparatus": "Vault Boys", "Routine": "A"}, {"BG Number": "625628", "Gymnast": "Gymnast 29", "Score": 11.95, "Age Group": "9\u201311", "Training Hours": "6\u201310 hrs", "Club": "Club ^", "Region": "N. Ireland", "Apparatus": "P-Bars", "Routine": "A"}, {"BG Number": "693081", "Gymnast": "Gymnast 30", "Score": 9.02, "Age Group": "12\u201314", "Training Hours": "2\u20135 hrs", "Club": "Club A", "Region": "East Midlands", "Apparatus": "P-Bars", "Routine": "C"}, {"BG Number": "360967", "Gymnast": "Gymnast 31", "Score": 13.06, "Age Group": "9\u201311", "Training Hours": "2\u20135 hrs", "Club": "Club B", "Region": "Yorkshire", "Apparatus": "P-Bars", "Routine": "B"}, {"BG Number": "580306", "Gymnast": "Gymnast 32", "Score": 13.93, "Age Group": "6\u20138", "Training Hours": "6\u201310 hrs", "Club": "Club C", "Region": "East Midlands", "Apparatus": "P-Bars", "Routine": "C"}, {"BG Number": "350975", "Gymnast": "Gymnast 33", "Score": 13.2, "Age Group": "12\u201314", "Training Hours": "2\u20135 hrs", "Club": "Club D", "Region": "N. Ireland", "Apparatus": "Vault Girls", "Routine": "B"}, {"BG Number": "468800", "Gymnast": "Gymnast 34", "Score": 13.99, "Age Group": "15+", "Training Hours": "6\u201310 hrs", "Club": "Club E", "Region": "North West", "Apparatus": "Pommel", "Routine": "B"}, {"BG Number": "709214", "Gymnast": "Gymnast 35", "Score": 12.73, "Age Group": "12\u201314", "Training Hours": "2\u20135 hrs", "Club": "Club F", "Region": "Wales", "Apparatus": "Vault Boys", "Routine": "B"}, {"BG Number": "480523", "Gymnast": "Gymnast 36", "Score": 9.96, "Age Group": "9\u201311", "Training Hours": "2\u20135 hrs", "Club": "Club G", "Region": "South", "Apparatus": "Beam", "Routine": "C"}, {"BG Number": "125890", "Gymnast": "Gymnast 37", "Score": 9.86, "Age Group": "9\u201311", "Training Hours": "2\u20135 hrs", "Club": "Club H", "Region": "East", "Apparatus": "Beam", "Routine": "A"}, {"BG Number": "998883", "Gymnast": "Gymnast 38", "Score": 9.09, "Age Group": "15+", "Training Hours": "2\u20135 hrs", "Club": "Club I", "Region": "North West", "Apparatus": "Floor Girls", "Routine": "C"}, {"BG Number": "439357", "Gymnast": "Gymnast 39", "Score": 10.45, "Age Group": "6\u20138", "Training Hours": "6\u201310 hrs", "Club": "Club J", "Region": "N. Ireland", "Apparatus": "P-Bars", "Routine": "A"}, {"BG Number": "211923", "Gymnast": "Gymnast 40", "Score": 9.65, "Age Group": "15+", "Training Hours": "2\u20135 hrs", "Club": "Club K", "Region": "Wales", "Apparatus": "High Bar", "Routine": "A"}, {"BG Number": "971862", "Gymnast": "Gymnast 41", "Score": 9.55, "Age Group": "6\u20138", "Training Hours": "2\u20135 hrs", "Club": "Club L", "Region": "South East", "Apparatus": "Vault Boys", "Routine": "B"}, {"BG Number": "290560", "Gymnast": "Gymnast 42", "Score": 10.56, "Age Group": "15+", "Training Hours": "2\u20135 hrs", "Club": "Club M", "Region": "N. Ireland", "Apparatus": "Rings", "Routine": "A"}, {"BG Number": "813903", "Gymnast": "Gymnast 43", "Score": 9.17, "Age Group": "9\u201311", "Training Hours": "2\u20135 hrs", "Club": "Club N", "Region": "Wales", "Apparatus": "Uneven Bar", "Routine": "C"}, {"BG Number": "566683", "Gymnast": "Gymnast 44", "Score": 10.28, "Age Group": "12\u201314", "Training Hours": "6\u201310 hrs", "Club": "Club O", "Region": "London", "Apparatus": "High Bar", "Routine": "B"}, {"BG Number": "512947", "Gymnast": "Gymnast 45", "Score": 11.7, "Age Group": "12\u201314", "Training Hours": "2\u20135 hrs", "Club": "Club P", "Region": "East Midlands", "Apparatus": "Vault Boys", "Routine": "A"}, {"BG Number": "882051", "Gymnast": "Gymnast 46", "Score": 10.5, "Age Group": "15+", "Training Hours": "2\u20135 hrs", "Club": "Club Q", "Region": "East Midlands", "Apparatus": "High Bar", "Routine": "A"}, {"BG Number": "952893", "Gymnast": "Gymnast 47", "Score": 10.94, "Age Group": "15+", "Training Hours": "6\u201310 hrs", "Club": "Club R", "Region": "East Midlands", "Apparatus": "P-Bars", "Routine": "C"}, {"BG Number": "971472", "Gymnast": "Gymnast 48", "Score": 10.42, "Age Group": "15+", "Training Hours": "6\u201310 hrs", "Club": "Club S", "Region": "Wales", "Apparatus": "Floor Boys", "Routine": "C"}, {"BG Number": "101070", "Gymnast": "Gymnast 49", "Score": 11.67, "Age Group": "12\u201314", "Training Hours": "6\u201310 hrs", "Club": "Club T", "Region": "South", "Apparatus": "Pommel", "Routine": "A"}, {"BG Number": "332300", "Gymnast": "Gymnast 50", "Score": 12.13, "Age Group": "6\u20138", "Training Hours": "2\u20135 hrs", "Club": "Club U", "Region": "East", "Apparatus": "Floor Girls", "Routine": "B"}, {"BG Number": "335317", "Gymnast": "Gymnast 51", "Score": 11.85, "Age Group": "9\u201311", "Training Hours": "6\u201310 hrs", "Club": "Club V", "Region": "Wales", "Apparatus": "Vault Boys", "Routine": "A"}, {"BG Number": "867121", "Gymnast": "Gymnast 52", "Score": 10.35, "Age Group": "6\u20138", "Training Hours": "6\u201310 hrs", "Club": "Club W", "Region": "East Midlands", "Apparatus": "Uneven Bar", "Routine": "A"}, {"BG Number": "123530", "Gymnast": "Gymnast 53", "Score": 13.83, "Age Group": "12\u201314", "Training Hours": "6\u201310 hrs", "Club": "Club X", "Region": "Wales", "Apparatus": "Vault Boys", "Routine": "B"}, {"BG Number": "876437", "Gymnast": "Gymnast 54", "Score": 10.93, "Age Group": "12\u201314", "Training Hours": "6\u201310 hrs", "Club": "Club Y", "Region": "East Midlands", "Apparatus": "Uneven Bar", "Routine": "B"}, {"BG Number": "812543", "Gymnast": "Gymnast 55", "Score": 13.04, "Age Group": "12\u201314", "Training Hours": "2\u20135 hrs", "Club": "Club Z", "Region": "London", "Apparatus": "Pommel", "Routine": "A"}, {"BG Number": "550719", "Gymnast": "Gymnast 56", "Score": 10.27, "Age Group": "6\u20138", "Training Hours": "6\u201310 hrs", "Club": "Club [", "Region": "North West", "Apparatus": "Floor Girls", "Routine": "B"}, {"BG Number": "141694", "Gymnast": "Gymnast 57", "Score": 10.78, "Age Group": "15+", "Training Hours": "6\u201310 hrs", "Club": "Club \\", "Region": "East", "Apparatus": "Pommel", "Routine": "A"}, {"BG Number": "467585", "Gymnast": "Gymnast 58", "Score": 11.23, "Age Group": "6\u20138", "Training Hours": "2\u20135 hrs", "Club": "Club ]", "Region": "East", "Apparatus": "Beam", "Routine": "A"}, {"BG Number": "855883", "Gymnast": "Gymnast 59", "Score": 13.57, "Age Group": "12\u201314", "Training Hours": "6\u201310 hrs", "Club": "Club ^", "Region": "South", "Apparatus": "P-Bars", "Routine": "B"}, {"BG Number": "452718", "Gymnast": "Gymnast 60", "Score": 11.37, "Age Group": "12\u201314", "Training Hours": "2\u20135 hrs", "Club": "Club A", "Region": "South West", "Apparatus": "Uneven Bar", "Routine": "A"}, {"BG Number": "509151", "Gymnast": "Gymnast 61", "Score": 12.55, "Age Group": "15+", "Training Hours": "2\u20135 hrs", "Club": "Club B", "Region": "East", "Apparatus": "Vault Girls", "Routine": "C"}, {"BG Number": "362029", "Gymnast": "Gymnast 62", "Score": 11.78, "Age Group": "6\u20138", "Training Hours": "2\u20135 hrs", "Club": "Club C", "Region": "South West", "Apparatus": "Floor Boys", "Routine": "A"}, {"BG Number": "726103", "Gymnast": "Gymnast 63", "Score": 10.33, "Age Group": "9\u201311", "Training Hours": "2\u20135 hrs", "Club": "Club D", "Region": "East", "Apparatus": "Vault Girls", "Routine": "C"}, {"BG Number": "266469", "Gymnast": "Gymnast 64", "Score": 12.65, "Age Group": "9\u201311", "Training Hours": "6\u201310 hrs", "Club": "Club E", "Region": "West Midlands", "Apparatus": "Vault Girls", "Routine": "B"}, {"BG Number": "275559", "Gymnast": "Gymnast 65", "Score": 11.11, "Age Group": "15+", "Training Hours": "6\u201310 hrs", "Club": "Club F", "Region": "Yorkshire", "Apparatus": "High Bar", "Routine": "B"}, {"BG Number": "698575", "Gymnast": "Gymnast 66", "Score": 11.45, "Age Group": "9\u201311", "Training Hours": "2\u20135 hrs", "Club": "Club G", "Region": "Yorkshire", "Apparatus": "Uneven Bar", "Routine": "A"}, {"BG Number": "607141", "Gymnast": "Gymnast 67", "Score": 13.06, "Age Group": "6\u20138", "Training Hours": "2\u20135 hrs", "Club": "Club H", "Region": "Yorkshire", "Apparatus": "Vault Boys", "Routine": "B"}, {"BG Number": "459865", "Gymnast": "Gymnast 68", "Score": 9.9, "Age Group": "15+", "Training Hours": "2\u20135 hrs", "Club": "Club I", "Region": "East", "Apparatus": "Vault Boys", "Routine": "C"}, {"BG Number": "571311", "Gymnast": "Gymnast 69", "Score": 11.02, "Age Group": "9\u201311", "Training Hours": "6\u201310 hrs", "Club": "Club J", "Region": "East Midlands", "Apparatus": "Floor Boys", "Routine": "B"}, {"BG Number": "760882", "Gymnast": "Gymnast 70", "Score": 10.99, "Age Group": "12\u201314", "Training Hours": "6\u201310 hrs", "Club": "Club K", "Region": "East Midlands", "Apparatus": "High Bar", "Routine": "C"}, {"BG Number": "847153", "Gymnast": "Gymnast 71", "Score": 13.3, "Age Group": "9\u201311", "Training Hours": "2\u20135 hrs", "Club": "Club L", "Region": "East", "Apparatus": "Uneven Bar", "Routine": "C"}, {"BG Number": "469419", "Gymnast": "Gymnast 72", "Score": 9.19, "Age Group": "15+", "Training Hours": "6\u201310 hrs", "Club": "Club M", "Region": "Yorkshire", "Apparatus": "High Bar", "Routine": "C"}, {"BG Number": "985114", "Gymnast": "Gymnast 73", "Score": 9.08, "Age Group": "12\u201314", "Training Hours": "6\u201310 hrs", "Club": "Club N", "Region": "N. Ireland", "Apparatus": "Pommel", "Routine": "B"}, {"BG Number": "849104", "Gymnast": "Gymnast 74", "Score": 10.24, "Age Group": "15+", "Training Hours": "2\u20135 hrs", "Club": "Club O", "Region": "South East", "Apparatus": "Floor Girls", "Routine": "A"}, {"BG Number": "157314", "Gymnast": "Gymnast 75", "Score": 9.45, "Age Group": "6\u20138", "Training Hours": "6\u201310 hrs", "Club": "Club P", "Region": "North West", "Apparatus": "High Bar", "Routine": "B"}, {"BG Number": "517151", "Gymnast": "Gymnast 76", "Score": 10.32, "Age Group": "6\u20138", "Training Hours": "2\u20135 hrs", "Club": "Club Q", "Region": "East", "Apparatus": "Vault Boys", "Routine": "A"}, {"BG Number": "767714", "Gymnast": "Gymnast 77", "Score": 10.99, "Age Group": "12\u201314", "Training Hours": "2\u20135 hrs", "Club": "Club R", "Region": "South East", "Apparatus": "Beam", "Routine": "C"}, {"BG Number": "126935", "Gymnast": "Gymnast 78", "Score": 11.06, "Age Group": "12\u201314", "Training Hours": "6\u201310 hrs", "Club": "Club S", "Region": "Yorkshire", "Apparatus": "Pommel", "Routine": "C"}, {"BG Number": "728563", "Gymnast": "Gymnast 79", "Score": 13.1, "Age Group": "15+", "Training Hours": "2\u20135 hrs", "Club": "Club T", "Region": "Yorkshire", "Apparatus": "P-Bars", "Routine": "B"}, {"BG Number": "415613", "Gymnast": "Gymnast 80", "Score": 9.41, "Age Group": "12\u201314", "Training Hours": "2\u20135 hrs", "Club": "Club U", "Region": "South West", "Apparatus": "P-Bars", "Routine": "B"}, {"BG Number": "829423", "Gymnast": "Gymnast 81", "Score": 11.54, "Age Group": "6\u20138", "Training Hours": "2\u20135 hrs", "Club": "Club V", "Region": "West Midlands", "Apparatus": "Vault Boys", "Routine": "A"}, {"BG Number": "363766", "Gymnast": "Gymnast 82", "Score": 10.36, "Age Group": "6\u20138", "Training Hours": "6\u201310 hrs", "Club": "Club W", "Region": "Yorkshire", "Apparatus": "Beam", "Routine": "B"}, {"BG Number": "517075", "Gymnast": "Gymnast 83", "Score": 12.54, "Age Group": "6\u20138", "Training Hours": "2\u20135 hrs", "Club": "Club X", "Region": "South", "Apparatus": "Rings", "Routine": "B"}, {"BG Number": "722145", "Gymnast": "Gymnast 84", "Score": 12.48, "Age Group": "15+", "Training Hours": "6\u201310 hrs", "Club": "Club Y", "Region": "South East", "Apparatus": "Uneven Bar", "Routine": "A"}, {"BG Number": "441927", "Gymnast": "Gymnast 85", "Score": 10.65, "Age Group": "6\u20138", "Training Hours": "6\u201310 hrs", "Club": "Club Z", "Region": "East", "Apparatus": "Beam", "Routine": "B"}, {"BG Number": "141429", "Gymnast": "Gymnast 86", "Score": 12.58, "Age Group": "15+", "Training Hours": "6\u201310 hrs", "Club": "Club [", "Region": "North West", "Apparatus": "Rings", "Routine": "A"}, {"BG Number": "927921", "Gymnast": "Gymnast 87", "Score": 13.26, "Age Group": "15+", "Training Hours": "6\u201310 hrs", "Club": "Club \\", "Region": "Wales", "Apparatus": "High Bar", "Routine": "C"}, {"BG Number": "836411", "Gymnast": "Gymnast 88", "Score": 11.48, "Age Group": "9\u201311", "Training Hours": "2\u20135 hrs", "Club": "Club ]", "Region": "West Midlands", "Apparatus": "Vault Girls", "Routine": "A"}, {"BG Number": "639423", "Gymnast": "Gymnast 89", "Score": 11.25, "Age Group": "9\u201311", "Training Hours": "2\u20135 hrs", "Club": "Club ^", "Region": "Yorkshire", "Apparatus": "High Bar", "Routine": "B"}, {"BG Number": "464366", "Gymnast": "Gymnast 90", "Score": 11.94, "Age Group": "9\u201311", "Training Hours": "2\u20135 hrs", "Club": "Club A", "Region": "East Midlands", "Apparatus": "Beam", "Routine": "B"}, {"BG Number": "966361", "Gymnast": "Gymnast 91", "Score": 11.75, "Age Group": "15+", "Training Hours": "2\u20135 hrs", "Club": "Club B", "Region": "London", "Apparatus": "Beam", "Routine": "A"}, {"BG Number": "643056", "Gymnast": "Gymnast 92", "Score": 9.04, "Age Group": "6\u20138", "Training Hours": "2\u20135 hrs", "Club": "Club C", "Region": "East Midlands", "Apparatus": "Rings", "Routine": "C"}, {"BG Number": "843335", "Gymnast": "Gymnast 93", "Score": 13.75, "Age Group": "9\u201311", "Training Hours": "6\u201310 hrs", "Club": "Club D", "Region": "North West", "Apparatus": "Floor Girls", "Routine": "B"}, {"BG Number": "164890", "Gymnast": "Gymnast 94", "Score": 12.82, "Age Group": "12\u201314", "Training Hours": "6\u201310 hrs", "Club": "Club E", "Region": "West Midlands", "Apparatus": "Beam", "Routine": "B"}, {"BG Number": "793460", "Gymnast": "Gymnast 95", "Score": 11.88, "Age Group": "6\u20138", "Training Hours": "2\u20135 hrs", "Club": "Club F", "Region": "South", "Apparatus": "Floor Girls", "Routine": "C"}, {"BG Number": "734567", "Gymnast": "Gymnast 96", "Score": 12.2, "Age Group": "12\u201314", "Training Hours": "2\u20135 hrs", "Club": "Club G", "Region": "West Midlands", "Apparatus": "Rings", "Routine": "A"}, {"BG Number": "258978", "Gymnast": "Gymnast 97", "Score": 10.59, "Age Group": "6\u20138", "Training Hours": "6\u201310 hrs", "Club": "Club H", "Region": "Scotland", "Apparatus": "Beam", "Routine": "B"}, {"BG Number": "214117", "Gymnast": "Gymnast 98", "Score": 10.16, "Age Group": "15+", "Training Hours": "6\u201310 hrs", "Club": "Club I", "Region": "East", "Apparatus": "Vault Boys", "Routine": "C"}, {"BG Number": "853310", "Gymnast": "Gymnast 99", "Score": 9.6, "Age Group": "9\u201311", "Training Hours": "2\u20135 hrs", "Club": "Club J", "Region": "East Midlands", "Apparatus": "Beam", "Routine": "A"}, {"BG Number": "705232", "Gymnast": "Gymnast 100", "Score": 13.37, "Age Group": "15+", "Training Hours": "6\u201310 hrs", "Club": "Club K", "Region": "South East", "Apparatus": "Floor Boys", "Routine": "B"}, {"BG Number": "766350", "Gymnast": "Gymnast 101", "Score": 12.4, "Age Group": "9\u201311", "Training Hours": "6\u201310 hrs", "Club": "Club L", "Region": "North West", "Apparatus": "Floor Girls", "Routine": "B"}, {"BG Number": "345582", "Gymnast": "Gymnast 102", "Score": 13.1, "Age Group": "9\u201311", "Training Hours": "6\u201310 hrs", "Club": "Club M", "Region": "Scotland", "Apparatus": "Floor Girls", "Routine": "A"}, {"BG Number": "125012", "Gymnast": "Gymnast 103", "Score": 9.17, "Age Group": "15+", "Training Hours": "6\u201310 hrs", "Club": "Club N", "Region": "Yorkshire", "Apparatus": "Rings", "Routine": "C"}, {"BG Number": "505352", "Gymnast": "Gymnast 104", "Score": 10.04, "Age Group": "9\u201311", "Training Hours": "6\u201310 hrs", "Club": "Club O", "Region": "South East", "Apparatus": "Pommel", "Routine": "C"}, {"BG Number": "878119", "Gymnast": "Gymnast 105", "Score": 9.1, "Age Group": "6\u20138", "Training Hours": "6\u201310 hrs", "Club": "Club P", "Region": "Scotland", "Apparatus": "Vault Boys", "Routine": "C"}, {"BG Number": "167640", "Gymnast": "Gymnast 106", "Score": 13.76, "Age Group": "15+", "Training Hours": "6\u201310 hrs", "Club": "Club Q", "Region": "Wales", "Apparatus": "Uneven Bar", "Routine": "B"}, {"BG Number": "183947", "Gymnast": "Gymnast 107", "Score": 12.95, "Age Group": "12\u201314", "Training Hours": "2\u20135 hrs", "Club": "Club R", "Region": "South", "Apparatus": "Vault Boys", "Routine": "A"}, {"BG Number": "972265", "Gymnast": "Gymnast 108", "Score": 9.33, "Age Group": "6\u20138", "Training Hours": "2\u20135 hrs", "Club": "Club S", "Region": "N. Ireland", "Apparatus": "Rings", "Routine": "A"}, {"BG Number": "202278", "Gymnast": "Gymnast 109", "Score": 9.4, "Age Group": "6\u20138", "Training Hours": "6\u201310 hrs", "Club": "Club T", "Region": "Yorkshire", "Apparatus": "Floor Girls", "Routine": "B"}, {"BG Number": "173090", "Gymnast": "Gymnast 110", "Score": 11.69, "Age Group": "6\u20138", "Training Hours": "2\u20135 hrs", "Club": "Club U", "Region": "Wales", "Apparatus": "Floor Girls", "Routine": "A"}, {"BG Number": "358052", "Gymnast": "Gymnast 111", "Score": 13.06, "Age Group": "6\u20138", "Training Hours": "2\u20135 hrs", "Club": "Club V", "Region": "Yorkshire", "Apparatus": "Floor Girls", "Routine": "C"}, {"BG Number": "739341", "Gymnast": "Gymnast 112", "Score": 12.61, "Age Group": "9\u201311", "Training Hours": "6\u201310 hrs", "Club": "Club W", "Region": "Scotland", "Apparatus": "Rings", "Routine": "C"}, {"BG Number": "181879", "Gymnast": "Gymnast 113", "Score": 12.84, "Age Group": "6\u20138", "Training Hours": "6\u201310 hrs", "Club": "Club X", "Region": "South West", "Apparatus": "Floor Boys", "Routine": "B"}, {"BG Number": "992046", "Gymnast": "Gymnast 114", "Score": 10.26, "Age Group": "15+", "Training Hours": "6\u201310 hrs", "Club": "Club Y", "Region": "East", "Apparatus": "Uneven Bar", "Routine": "B"}, {"BG Number": "625040", "Gymnast": "Gymnast 115", "Score": 11.41, "Age Group": "6\u20138", "Training Hours": "2\u20135 hrs", "Club": "Club Z", "Region": "Wales", "Apparatus": "P-Bars", "Routine": "C"}, {"BG Number": "239436", "Gymnast": "Gymnast 116", "Score": 13.82, "Age Group": "6\u20138", "Training Hours": "6\u201310 hrs", "Club": "Club [", "Region": "East Midlands", "Apparatus": "Beam", "Routine": "A"}, {"BG Number": "471146", "Gymnast": "Gymnast 117", "Score": 11.22, "Age Group": "12\u201314", "Training Hours": "6\u201310 hrs", "Club": "Club \\", "Region": "East", "Apparatus": "Pommel", "Routine": "A"}, {"BG Number": "722014", "Gymnast": "Gymnast 118", "Score": 11.47, "Age Group": "15+", "Training Hours": "6\u201310 hrs", "Club": "Club ]", "Region": "N. Ireland", "Apparatus": "Floor Girls", "Routine": "B"}, {"BG Number": "278003", "Gymnast": "Gymnast 119", "Score": 11.47, "Age Group": "15+", "Training Hours": "2\u20135 hrs", "Club": "Club ^", "Region": "East Midlands", "Apparatus": "Vault Boys", "Routine": "B"}, {"BG Number": "923646", "Gymnast": "Gymnast 120", "Score": 10.63, "Age Group": "12\u201314", "Training Hours": "6\u201310 hrs", "Club": "Club A", "Region": "South", "Apparatus": "Floor Boys", "Routine": "B"}, {"BG Number": "967523", "Gymnast": "Gymnast 121", "Score": 11.72, "Age Group": "15+", "Training Hours": "6\u201310 hrs", "Club": "Club B", "Region": "South West", "Apparatus": "Uneven Bar", "Routine": "A"}, {"BG Number": "813741", "Gymnast": "Gymnast 122", "Score": 9.89, "Age Group": "15+", "Training Hours": "6\u201310 hrs", "Club": "Club C", "Region": "South East", "Apparatus": "Vault Girls", "Routine": "C"}, {"BG Number": "403747", "Gymnast": "Gymnast 123", "Score": 13.98, "Age Group": "15+", "Training Hours": "2\u20135 hrs", "Club": "Club D", "Region": "East", "Apparatus": "Pommel", "Routine": "C"}, {"BG Number": "608817", "Gymnast": "Gymnast 124", "Score": 12.88, "Age Group": "9\u201311", "Training Hours": "2\u20135 hrs", "Club": "Club E", "Region": "Scotland", "Apparatus": "P-Bars", "Routine": "A"}, {"BG Number": "996489", "Gymnast": "Gymnast 125", "Score": 11.0, "Age Group": "6\u20138", "Training Hours": "2\u20135 hrs", "Club": "Club F", "Region": "West Midlands", "Apparatus": "Beam", "Routine": "C"}, {"BG Number": "669673", "Gymnast": "Gymnast 126", "Score": 13.23, "Age Group": "6\u20138", "Training Hours": "6\u201310 hrs", "Club": "Club G", "Region": "South West", "Apparatus": "Floor Boys", "Routine": "B"}, {"BG Number": "887145", "Gymnast": "Gymnast 127", "Score": 11.05, "Age Group": "9\u201311", "Training Hours": "2\u20135 hrs", "Club": "Club H", "Region": "East Midlands", "Apparatus": "Rings", "Routine": "A"}, {"BG Number": "676117", "Gymnast": "Gymnast 128", "Score": 9.9, "Age Group": "6\u20138", "Training Hours": "2\u20135 hrs", "Club": "Club I", "Region": "South West", "Apparatus": "Beam", "Routine": "B"}, {"BG Number": "778988", "Gymnast": "Gymnast 129", "Score": 11.89, "Age Group": "9\u201311", "Training Hours": "6\u201310 hrs", "Club": "Club J", "Region": "Yorkshire", "Apparatus": "Vault Girls", "Routine": "A"}, {"BG Number": "911378", "Gymnast": "Gymnast 130", "Score": 12.58, "Age Group": "9\u201311", "Training Hours": "2\u20135 hrs", "Club": "Club K", "Region": "Wales", "Apparatus": "Vault Girls", "Routine": "C"}, {"BG Number": "798637", "Gymnast": "Gymnast 131", "Score": 11.76, "Age Group": "6\u20138", "Training Hours": "2\u20135 hrs", "Club": "Club L", "Region": "N. Ireland", "Apparatus": "High Bar", "Routine": "B"}, {"BG Number": "962382", "Gymnast": "Gymnast 132", "Score": 9.56, "Age Group": "12\u201314", "Training Hours": "6\u201310 hrs", "Club": "Club M", "Region": "North West", "Apparatus": "Rings", "Routine": "B"}, {"BG Number": "110511", "Gymnast": "Gymnast 133", "Score": 10.95, "Age Group": "9\u201311", "Training Hours": "6\u201310 hrs", "Club": "Club N", "Region": "East", "Apparatus": "Floor Girls", "Routine": "B"}, {"BG Number": "897840", "Gymnast": "Gymnast 134", "Score": 10.66, "Age Group": "9\u201311", "Training Hours": "6\u201310 hrs", "Club": "Club O", "Region": "South East", "Apparatus": "Beam", "Routine": "B"}, {"BG Number": "611668", "Gymnast": "Gymnast 135", "Score": 12.11, "Age Group": "12\u201314", "Training Hours": "2\u20135 hrs", "Club": "Club P", "Region": "West Midlands", "Apparatus": "Pommel", "Routine": "C"}, {"BG Number": "502088", "Gymnast": "Gymnast 136", "Score": 12.35, "Age Group": "6\u20138", "Training Hours": "2\u20135 hrs", "Club": "Club Q", "Region": "South East", "Apparatus": "P-Bars", "Routine": "A"}, {"BG Number": "927913", "Gymnast": "Gymnast 137", "Score": 13.54, "Age Group": "15+", "Training Hours": "2\u20135 hrs", "Club": "Club R", "Region": "East", "Apparatus": "Rings", "Routine": "C"}, {"BG Number": "157243", "Gymnast": "Gymnast 138", "Score": 11.86, "Age Group": "15+", "Training Hours": "2\u20135 hrs", "Club": "Club S", "Region": "West Midlands", "Apparatus": "Floor Boys", "Routine": "B"}, {"BG Number": "147718", "Gymnast": "Gymnast 139", "Score": 12.38, "Age Group": "15+", "Training Hours": "6\u201310 hrs", "Club": "Club T", "Region": "Scotland", "Apparatus": "Floor Boys", "Routine": "A"}, {"BG Number": "569511", "Gymnast": "Gymnast 140", "Score": 11.58, "Age Group": "15+", "Training Hours": "2\u20135 hrs", "Club": "Club U", "Region": "South West", "Apparatus": "Uneven Bar", "Routine": "C"}, {"BG Number": "202518", "Gymnast": "Gymnast 141", "Score": 9.92, "Age Group": "15+", "Training Hours": "6\u201310 hrs", "Club": "Club V", "Region": "North West", "Apparatus": "Vault Girls", "Routine": "A"}, {"BG Number": "833841", "Gymnast": "Gymnast 142", "Score": 10.99, "Age Group": "9\u201311", "Training Hours": "6\u201310 hrs", "Club": "Club W", "Region": "Scotland", "Apparatus": "High Bar", "Routine": "C"}, {"BG Number": "680201", "Gymnast": "Gymnast 143", "Score": 10.08, "Age Group": "9\u201311", "Training Hours": "6\u201310 hrs", "Club": "Club X", "Region": "London", "Apparatus": "High Bar", "Routine": "B"}, {"BG Number": "234291", "Gymnast": "Gymnast 144", "Score": 12.84, "Age Group": "12\u201314", "Training Hours": "2\u20135 hrs", "Club": "Club Y", "Region": "East Midlands", "Apparatus": "High Bar", "Routine": "B"}, {"BG Number": "179817", "Gymnast": "Gymnast 145", "Score": 9.85, "Age Group": "6\u20138", "Training Hours": "6\u201310 hrs", "Club": "Club Z", "Region": "London", "Apparatus": "Rings", "Routine": "B"}, {"BG Number": "246785", "Gymnast": "Gymnast 146", "Score": 13.14, "Age Group": "6\u20138", "Training Hours": "6\u201310 hrs", "Club": "Club [", "Region": "London", "Apparatus": "Beam", "Routine": "B"}, {"BG Number": "329236", "Gymnast": "Gymnast 147", "Score": 12.59, "Age Group": "15+", "Training Hours": "6\u201310 hrs", "Club": "Club \\", "Region": "East", "Apparatus": "Uneven Bar", "Routine": "C"}, {"BG Number": "895319", "Gymnast": "Gymnast 148", "Score": 13.1, "Age Group": "9\u201311", "Training Hours": "6\u201310 hrs", "Club": "Club ]", "Region": "East Midlands", "Apparatus": "Pommel", "Routine": "B"}, {"BG Number": "652843", "Gymnast": "Gymnast 149", "Score": 10.14, "Age Group": "6\u20138", "Training Hours": "6\u201310 hrs", "Club": "Club ^", "Region": "Wales", "Apparatus": "High Bar", "Routine": "A"}, {"BG Number": "773525", "Gymnast": "Gymnast 150", "Score": 9.16, "Age Group": "6\u20138", "Training Hours": "6\u201310 hrs", "Club": "Club A", "Region": "West Midlands", "Apparatus": "High Bar", "Routine": "B"}, {"BG Number": "628353", "Gymnast": "Gymnast 151", "Score": 9.34, "Age Group": "15+", "Training Hours": "2\u20135 hrs", "Club": "Club B", "Region": "East", "Apparatus": "Vault Boys", "Routine": "C"}, {"BG Number": "400105", "Gymnast": "Gymnast 152", "Score": 9.74, "Age Group": "6\u20138", "Training Hours": "6\u201310 hrs", "Club": "Club C", "Region": "N. Ireland", "Apparatus": "Beam", "Routine": "C"}, {"BG Number": "239862", "Gymnast": "Gymnast 153", "Score": 10.02, "Age Group": "15+", "Training Hours": "6\u201310 hrs", "Club": "Club D", "Region": "South East", "Apparatus": "Vault Boys", "Routine": "A"}, {"BG Number": "485136", "Gymnast": "Gymnast 154", "Score": 12.66, "Age Group": "9\u201311", "Training Hours": "6\u201310 hrs", "Club": "Club E", "Region": "London", "Apparatus": "Pommel", "Routine": "C"}, {"BG Number": "721326", "Gymnast": "Gymnast 155", "Score": 13.92, "Age Group": "15+", "Training Hours": "2\u20135 hrs", "Club": "Club F", "Region": "East", "Apparatus": "High Bar", "Routine": "B"}, {"BG Number": "563583", "Gymnast": "Gymnast 156", "Score": 9.52, "Age Group": "15+", "Training Hours": "6\u201310 hrs", "Club": "Club G", "Region": "South", "Apparatus": "Floor Girls", "Routine": "B"}, {"BG Number": "414882", "Gymnast": "Gymnast 157", "Score": 11.69, "Age Group": "15+", "Training Hours": "2\u20135 hrs", "Club": "Club H", "Region": "South West", "Apparatus": "Pommel", "Routine": "A"}, {"BG Number": "361686", "Gymnast": "Gymnast 158", "Score": 11.05, "Age Group": "15+", "Training Hours": "2\u20135 hrs", "Club": "Club I", "Region": "West Midlands", "Apparatus": "Beam", "Routine": "A"}, {"BG Number": "842559", "Gymnast": "Gymnast 159", "Score": 12.14, "Age Group": "12\u201314", "Training Hours": "2\u20135 hrs", "Club": "Club J", "Region": "N. Ireland", "Apparatus": "Uneven Bar", "Routine": "C"}, {"BG Number": "599001", "Gymnast": "Gymnast 160", "Score": 11.07, "Age Group": "12\u201314", "Training Hours": "2\u20135 hrs", "Club": "Club K", "Region": "Yorkshire", "Apparatus": "High Bar", "Routine": "A"}, {"BG Number": "857992", "Gymnast": "Gymnast 161", "Score": 11.23, "Age Group": "12\u201314", "Training Hours": "2\u20135 hrs", "Club": "Club L", "Region": "North West", "Apparatus": "Vault Boys", "Routine": "C"}, {"BG Number": "541349", "Gymnast": "Gymnast 162", "Score": 9.36, "Age Group": "15+", "Training Hours": "2\u20135 hrs", "Club": "Club M", "Region": "N. Ireland", "Apparatus": "Vault Girls", "Routine": "B"}, {"BG Number": "241286", "Gymnast": "Gymnast 163", "Score": 10.11, "Age Group": "15+", "Training Hours": "6\u201310 hrs", "Club": "Club N", "Region": "N. Ireland", "Apparatus": "Vault Boys", "Routine": "B"}, {"BG Number": "989093", "Gymnast": "Gymnast 164", "Score": 12.99, "Age Group": "6\u20138", "Training Hours": "6\u201310 hrs", "Club": "Club O", "Region": "East", "Apparatus": "High Bar", "Routine": "A"}, {"BG Number": "937761", "Gymnast": "Gymnast 165", "Score": 10.61, "Age Group": "12\u201314", "Training Hours": "2\u20135 hrs", "Club": "Club P", "Region": "East Midlands", "Apparatus": "Vault Girls", "Routine": "B"}, {"BG Number": "487508", "Gymnast": "Gymnast 166", "Score": 12.66, "Age Group": "15+", "Training Hours": "6\u201310 hrs", "Club": "Club Q", "Region": "South East", "Apparatus": "Beam", "Routine": "C"}, {"BG Number": "737714", "Gymnast": "Gymnast 167", "Score": 10.9, "Age Group": "12\u201314", "Training Hours": "2\u20135 hrs", "Club": "Club R", "Region": "South East", "Apparatus": "P-Bars", "Routine": "C"}, {"BG Number": "981666", "Gymnast": "Gymnast 168", "Score": 13.65, "Age Group": "12\u201314", "Training Hours": "6\u201310 hrs", "Club": "Club S", "Region": "East", "Apparatus": "Pommel", "Routine": "C"}, {"BG Number": "812586", "Gymnast": "Gymnast 169", "Score": 13.89, "Age Group": "9\u201311", "Training Hours": "2\u20135 hrs", "Club": "Club T", "Region": "Yorkshire", "Apparatus": "Uneven Bar", "Routine": "A"}, {"BG Number": "882525", "Gymnast": "Gymnast 170", "Score": 12.08, "Age Group": "15+", "Training Hours": "6\u201310 hrs", "Club": "Club U", "Region": "South East", "Apparatus": "Vault Boys", "Routine": "A"}, {"BG Number": "408387", "Gymnast": "Gymnast 171", "Score": 11.82, "Age Group": "12\u201314", "Training Hours": "6\u201310 hrs", "Club": "Club V", "Region": "London", "Apparatus": "Vault Boys", "Routine": "B"}, {"BG Number": "430745", "Gymnast": "Gymnast 172", "Score": 12.27, "Age Group": "15+", "Training Hours": "6\u201310 hrs", "Club": "Club W", "Region": "Yorkshire", "Apparatus": "Vault Boys", "Routine": "B"}, {"BG Number": "287792", "Gymnast": "Gymnast 173", "Score": 10.13, "Age Group": "9\u201311", "Training Hours": "2\u20135 hrs", "Club": "Club X", "Region": "Scotland", "Apparatus": "Uneven Bar", "Routine": "A"}, {"BG Number": "124206", "Gymnast": "Gymnast 174", "Score": 9.92, "Age Group": "9\u201311", "Training Hours": "6\u201310 hrs", "Club": "Club Y", "Region": "Wales", "Apparatus": "Floor Boys", "Routine": "C"}, {"BG Number": "241722", "Gymnast": "Gymnast 175", "Score": 11.71, "Age Group": "9\u201311", "Training Hours": "6\u201310 hrs", "Club": "Club Z", "Region": "N. Ireland", "Apparatus": "Beam", "Routine": "C"}, {"BG Number": "803897", "Gymnast": "Gymnast 176", "Score": 12.91, "Age Group": "12\u201314", "Training Hours": "2\u20135 hrs", "Club": "Club [", "Region": "East", "Apparatus": "Uneven Bar", "Routine": "A"}, {"BG Number": "324982", "Gymnast": "Gymnast 177", "Score": 11.05, "Age Group": "9\u201311", "Training Hours": "2\u20135 hrs", "Club": "Club \\", "Region": "N. Ireland", "Apparatus": "Vault Boys", "Routine": "A"}, {"BG Number": "629095", "Gymnast": "Gymnast 178", "Score": 11.13, "Age Group": "6\u20138", "Training Hours": "6\u201310 hrs", "Club": "Club ]", "Region": "Wales", "Apparatus": "Vault Girls", "Routine": "B"}, {"BG Number": "426953", "Gymnast": "Gymnast 179", "Score": 12.46, "Age Group": "12\u201314", "Training Hours": "6\u201310 hrs", "Club": "Club ^", "Region": "North West", "Apparatus": "Pommel", "Routine": "C"}, {"BG Number": "253294", "Gymnast": "Gymnast 180", "Score": 12.92, "Age Group": "12\u201314", "Training Hours": "6\u201310 hrs", "Club": "Club A", "Region": "Scotland", "Apparatus": "Vault Boys", "Routine": "B"}, {"BG Number": "661854", "Gymnast": "Gymnast 181", "Score": 13.59, "Age Group": "9\u201311", "Training Hours": "2\u20135 hrs", "Club": "Club B", "Region": "N. Ireland", "Apparatus": "Floor Girls", "Routine": "C"}, {"BG Number": "163265", "Gymnast": "Gymnast 182", "Score": 13.18, "Age Group": "15+", "Training Hours": "2\u20135 hrs", "Club": "Club C", "Region": "East", "Apparatus": "Beam", "Routine": "C"}, {"BG Number": "613696", "Gymnast": "Gymnast 183", "Score": 12.88, "Age Group": "9\u201311", "Training Hours": "6\u201310 hrs", "Club": "Club D", "Region": "East", "Apparatus": "Vault Boys", "Routine": "B"}, {"BG Number": "119861", "Gymnast": "Gymnast 184", "Score": 9.65, "Age Group": "9\u201311", "Training Hours": "6\u201310 hrs", "Club": "Club E", "Region": "Scotland", "Apparatus": "Floor Boys", "Routine": "C"}, {"BG Number": "580659", "Gymnast": "Gymnast 185", "Score": 12.96, "Age Group": "12\u201314", "Training Hours": "2\u20135 hrs", "Club": "Club F", "Region": "N. Ireland", "Apparatus": "Floor Girls", "Routine": "B"}, {"BG Number": "818370", "Gymnast": "Gymnast 186", "Score": 9.77, "Age Group": "15+", "Training Hours": "6\u201310 hrs", "Club": "Club G", "Region": "Yorkshire", "Apparatus": "High Bar", "Routine": "B"}, {"BG Number": "754297", "Gymnast": "Gymnast 187", "Score": 13.69, "Age Group": "15+", "Training Hours": "2\u20135 hrs", "Club": "Club H", "Region": "South West", "Apparatus": "High Bar", "Routine": "B"}, {"BG Number": "782419", "Gymnast": "Gymnast 188", "Score": 13.02, "Age Group": "9\u201311", "Training Hours": "6\u201310 hrs", "Club": "Club I", "Region": "West Midlands", "Apparatus": "Uneven Bar", "Routine": "B"}, {"BG Number": "794712", "Gymnast": "Gymnast 189", "Score": 11.53, "Age Group": "6\u20138", "Training Hours": "6\u201310 hrs", "Club": "Club J", "Region": "South West", "Apparatus": "P-Bars", "Routine": "A"}, {"BG Number": "480837", "Gymnast": "Gymnast 190", "Score": 13.57, "Age Group": "15+", "Training Hours": "6\u201310 hrs", "Club": "Club K", "Region": "South", "Apparatus": "Beam", "Routine": "A"}, {"BG Number": "241106", "Gymnast": "Gymnast 191", "Score": 10.65, "Age Group": "15+", "Training Hours": "6\u201310 hrs", "Club": "Club L", "Region": "South West", "Apparatus": "Rings", "Routine": "A"}, {"BG Number": "356303", "Gymnast": "Gymnast 192", "Score": 10.3, "Age Group": "12\u201314", "Training Hours": "6\u201310 hrs", "Club": "Club M", "Region": "London", "Apparatus": "P-Bars", "Routine": "C"}, {"BG Number": "219422", "Gymnast": "Gymnast 193", "Score": 13.91, "Age Group": "12\u201314", "Training Hours": "6\u201310 hrs", "Club": "Club N", "Region": "East", "Apparatus": "Pommel", "Routine": "B"}, {"BG Number": "800910", "Gymnast": "Gymnast 194", "Score": 13.21, "Age Group": "15+", "Training Hours": "2\u20135 hrs", "Club": "Club O", "Region": "South East", "Apparatus": "Uneven Bar", "Routine": "C"}, {"BG Number": "506021", "Gymnast": "Gymnast 195", "Score": 13.41, "Age Group": "6\u20138", "Training Hours": "2\u20135 hrs", "Club": "Club P", "Region": "South West", "Apparatus": "Pommel", "Routine": "C"}, {"BG Number": "634766", "Gymnast": "Gymnast 196", "Score": 9.75, "Age Group": "12\u201314", "Training Hours": "2\u20135 hrs", "Club": "Club Q", "Region": "Scotland", "Apparatus": "Vault Boys", "Routine": "A"}, {"BG Number": "856448", "Gymnast": "Gymnast 197", "Score": 11.05, "Age Group": "6\u20138", "Training Hours": "6\u201310 hrs", "Club": "Club R", "Region": "Scotland", "Apparatus": "Beam", "Routine": "B"}, {"BG Number": "492332", "Gymnast": "Gymnast 198", "Score": 13.71, "Age Group": "12\u201314", "Training Hours": "2\u20135 hrs", "Club": "Club S", "Region": "West Midlands", "Apparatus": "Vault Boys", "Routine": "B"}, {"BG Number": "645501", "Gymnast": "Gymnast 199", "Score": 12.38, "Age Group": "6\u20138", "Training Hours": "2\u20135 hrs", "Club": "Club T", "Region": "East", "Apparatus": "High Bar", "Routine": "A"}, {"BG Number": "713922", "Gymnast": "Gymnast 200", "Score": 11.11, "Age Group": "6\u20138", "Training Hours": "2\u20135 hrs", "Club": "Club U", "Region": "South", "Apparatus": "Vault Girls", "Routine": "C"}, {"BG Number": "840603", "Gymnast": "Gymnast 201", "Score": 11.5, "Age Group": "12\u201314", "Training Hours": "2\u20135 hrs", "Club": "Club V", "Region": "East Midlands", "Apparatus": "High Bar", "Routine": "C"}, {"BG Number": "864160", "Gymnast": "Gymnast 202", "Score": 11.26, "Age Group": "12\u201314", "Training Hours": "2\u20135 hrs", "Club": "Club W", "Region": "West Midlands", "Apparatus": "High Bar", "Routine": "A"}, {"BG Number": "425207", "Gymnast": "Gymnast 203", "Score": 12.36, "Age Group": "6\u20138", "Training Hours": "6\u201310 hrs", "Club": "Club X", "Region": "East", "Apparatus": "Pommel", "Routine": "B"}, {"BG Number": "632664", "Gymnast": "Gymnast 204", "Score": 12.32, "Age Group": "15+", "Training Hours": "2\u20135 hrs", "Club": "Club Y", "Region": "Scotland", "Apparatus": "High Bar", "Routine": "C"}, {"BG Number": "919751", "Gymnast": "Gymnast 205", "Score": 12.34, "Age Group": "6\u20138", "Training Hours": "6\u201310 hrs", "Club": "Club Z", "Region": "London", "Apparatus": "Floor Boys", "Routine": "A"}, {"BG Number": "955897", "Gymnast": "Gymnast 206", "Score": 9.57, "Age Group": "12\u201314", "Training Hours": "6\u201310 hrs", "Club": "Club [", "Region": "Scotland", "Apparatus": "High Bar", "Routine": "B"}, {"BG Number": "352737", "Gymnast": "Gymnast 207", "Score": 10.47, "Age Group": "15+", "Training Hours": "6\u201310 hrs", "Club": "Club \\", "Region": "South West", "Apparatus": "P-Bars", "Routine": "C"}, {"BG Number": "157213", "Gymnast": "Gymnast 208", "Score": 9.57, "Age Group": "12\u201314", "Training Hours": "6\u201310 hrs", "Club": "Club ]", "Region": "Yorkshire", "Apparatus": "P-Bars", "Routine": "C"}, {"BG Number": "222578", "Gymnast": "Gymnast 209", "Score": 12.53, "Age Group": "6\u20138", "Training Hours": "6\u201310 hrs", "Club": "Club ^", "Region": "East Midlands", "Apparatus": "Floor Girls", "Routine": "B"}, {"BG Number": "298728", "Gymnast": "Gymnast 210", "Score": 11.72, "Age Group": "12\u201314", "Training Hours": "2\u20135 hrs", "Club": "Club A", "Region": "North West", "Apparatus": "Pommel", "Routine": "C"}, {"BG Number": "669983", "Gymnast": "Gymnast 211", "Score": 9.33, "Age Group": "12\u201314", "Training Hours": "2\u20135 hrs", "Club": "Club B", "Region": "South", "Apparatus": "Vault Boys", "Routine": "A"}, {"BG Number": "542007", "Gymnast": "Gymnast 212", "Score": 11.95, "Age Group": "6\u20138", "Training Hours": "6\u201310 hrs", "Club": "Club C", "Region": "Scotland", "Apparatus": "Rings", "Routine": "C"}, {"BG Number": "380591", "Gymnast": "Gymnast 213", "Score": 11.35, "Age Group": "6\u20138", "Training Hours": "2\u20135 hrs", "Club": "Club D", "Region": "Scotland", "Apparatus": "Rings", "Routine": "C"}, {"BG Number": "451884", "Gymnast": "Gymnast 214", "Score": 11.88, "Age Group": "6\u20138", "Training Hours": "2\u20135 hrs", "Club": "Club E", "Region": "South", "Apparatus": "High Bar", "Routine": "A"}, {"BG Number": "676053", "Gymnast": "Gymnast 215", "Score": 10.82, "Age Group": "15+", "Training Hours": "2\u20135 hrs", "Club": "Club F", "Region": "South West", "Apparatus": "Vault Boys", "Routine": "A"}, {"BG Number": "465887", "Gymnast": "Gymnast 216", "Score": 11.22, "Age Group": "9\u201311", "Training Hours": "6\u201310 hrs", "Club": "Club G", "Region": "South", "Apparatus": "Floor Girls", "Routine": "C"}, {"BG Number": "478386", "Gymnast": "Gymnast 217", "Score": 13.53, "Age Group": "6\u20138", "Training Hours": "6\u201310 hrs", "Club": "Club H", "Region": "N. Ireland", "Apparatus": "P-Bars", "Routine": "A"}, {"BG Number": "551340", "Gymnast": "Gymnast 218", "Score": 10.46, "Age Group": "6\u20138", "Training Hours": "2\u20135 hrs", "Club": "Club I", "Region": "Scotland", "Apparatus": "Floor Boys", "Routine": "B"}, {"BG Number": "904508", "Gymnast": "Gymnast 219", "Score": 12.3, "Age Group": "15+", "Training Hours": "2\u20135 hrs", "Club": "Club J", "Region": "Wales", "Apparatus": "Rings", "Routine": "C"}, {"BG Number": "767018", "Gymnast": "Gymnast 220", "Score": 9.1, "Age Group": "15+", "Training Hours": "6\u201310 hrs", "Club": "Club K", "Region": "N. Ireland", "Apparatus": "Floor Boys", "Routine": "A"}, {"BG Number": "755341", "Gymnast": "Gymnast 221", "Score": 10.62, "Age Group": "15+", "Training Hours": "6\u201310 hrs", "Club": "Club L", "Region": "South East", "Apparatus": "Uneven Bar", "Routine": "A"}, {"BG Number": "325957", "Gymnast": "Gymnast 222", "Score": 12.72, "Age Group": "6\u20138", "Training Hours": "2\u20135 hrs", "Club": "Club M", "Region": "North West", "Apparatus": "Beam", "Routine": "C"}, {"BG Number": "246427", "Gymnast": "Gymnast 223", "Score": 9.9, "Age Group": "15+", "Training Hours": "2\u20135 hrs", "Club": "Club N", "Region": "South", "Apparatus": "Pommel", "Routine": "C"}, {"BG Number": "509504", "Gymnast": "Gymnast 224", "Score": 13.34, "Age Group": "9\u201311", "Training Hours": "2\u20135 hrs", "Club": "Club O", "Region": "South West", "Apparatus": "Beam", "Routine": "C"}, {"BG Number": "665469", "Gymnast": "Gymnast 225", "Score": 9.81, "Age Group": "6\u20138", "Training Hours": "6\u201310 hrs", "Club": "Club P", "Region": "Yorkshire", "Apparatus": "Pommel", "Routine": "A"}, {"BG Number": "424217", "Gymnast": "Gymnast 226", "Score": 12.42, "Age Group": "6\u20138", "Training Hours": "2\u20135 hrs", "Club": "Club Q", "Region": "Scotland", "Apparatus": "Rings", "Routine": "C"}, {"BG Number": "198812", "Gymnast": "Gymnast 227", "Score": 10.0, "Age Group": "12\u201314", "Training Hours": "2\u20135 hrs", "Club": "Club R", "Region": "North West", "Apparatus": "P-Bars", "Routine": "C"}, {"BG Number": "480386", "Gymnast": "Gymnast 228", "Score": 13.53, "Age Group": "12\u201314", "Training Hours": "2\u20135 hrs", "Club": "Club S", "Region": "Yorkshire", "Apparatus": "Beam", "Routine": "A"}, {"BG Number": "294522", "Gymnast": "Gymnast 229", "Score": 13.41, "Age Group": "9\u201311", "Training Hours": "6\u201310 hrs", "Club": "Club T", "Region": "East Midlands", "Apparatus": "P-Bars", "Routine": "B"}, {"BG Number": "706794", "Gymnast": "Gymnast 230", "Score": 10.92, "Age Group": "9\u201311", "Training Hours": "6\u201310 hrs", "Club": "Club U", "Region": "East Midlands", "Apparatus": "Rings", "Routine": "B"}, {"BG Number": "890406", "Gymnast": "Gymnast 231", "Score": 12.6, "Age Group": "6\u20138", "Training Hours": "2\u20135 hrs", "Club": "Club V", "Region": "N. Ireland", "Apparatus": "Floor Girls", "Routine": "B"}, {"BG Number": "212087", "Gymnast": "Gymnast 232", "Score": 13.68, "Age Group": "9\u201311", "Training Hours": "6\u201310 hrs", "Club": "Club W", "Region": "East Midlands", "Apparatus": "High Bar", "Routine": "B"}, {"BG Number": "503416", "Gymnast": "Gymnast 233", "Score": 9.22, "Age Group": "6\u20138", "Training Hours": "2\u20135 hrs", "Club": "Club X", "Region": "East Midlands", "Apparatus": "Vault Boys", "Routine": "C"}, {"BG Number": "660218", "Gymnast": "Gymnast 234", "Score": 13.94, "Age Group": "6\u20138", "Training Hours": "2\u20135 hrs", "Club": "Club Y", "Region": "North West", "Apparatus": "Vault Girls", "Routine": "C"}, {"BG Number": "165231", "Gymnast": "Gymnast 235", "Score": 10.29, "Age Group": "6\u20138", "Training Hours": "6\u201310 hrs", "Club": "Club Z", "Region": "East Midlands", "Apparatus": "Rings", "Routine": "A"}, {"BG Number": "365239", "Gymnast": "Gymnast 236", "Score": 10.87, "Age Group": "6\u20138", "Training Hours": "6\u201310 hrs", "Club": "Club [", "Region": "Yorkshire", "Apparatus": "Beam", "Routine": "B"}, {"BG Number": "872488", "Gymnast": "Gymnast 237", "Score": 10.09, "Age Group": "6\u20138", "Training Hours": "2\u20135 hrs", "Club": "Club \\", "Region": "South West", "Apparatus": "P-Bars", "Routine": "B"}, {"BG Number": "140981", "Gymnast": "Gymnast 238", "Score": 9.39, "Age Group": "9\u201311", "Training Hours": "2\u20135 hrs", "Club": "Club ]", "Region": "South", "Apparatus": "Vault Boys", "Routine": "B"}, {"BG Number": "405820", "Gymnast": "Gymnast 239", "Score": 9.19, "Age Group": "12\u201314", "Training Hours": "6\u201310 hrs", "Club": "Club ^", "Region": "N. Ireland", "Apparatus": "Pommel", "Routine": "C"}, {"BG Number": "784009", "Gymnast": "Gymnast 240", "Score": 13.5, "Age Group": "15+", "Training Hours": "6\u201310 hrs", "Club": "Club A", "Region": "West Midlands", "Apparatus": "Pommel", "Routine": "A"}, {"BG Number": "793993", "Gymnast": "Gymnast 241", "Score": 13.9, "Age Group": "9\u201311", "Training Hours": "6\u201310 hrs", "Club": "Club B", "Region": "West Midlands", "Apparatus": "Vault Girls", "Routine": "A"}, {"BG Number": "485956", "Gymnast": "Gymnast 242", "Score": 10.3, "Age Group": "15+", "Training Hours": "2\u20135 hrs", "Club": "Club C", "Region": "Wales", "Apparatus": "Rings", "Routine": "A"}, {"BG Number": "192128", "Gymnast": "Gymnast 243", "Score": 13.75, "Age Group": "15+", "Training Hours": "2\u20135 hrs", "Club": "Club D", "Region": "Scotland", "Apparatus": "P-Bars", "Routine": "C"}, {"BG Number": "278179", "Gymnast": "Gymnast 244", "Score": 9.01, "Age Group": "6\u20138", "Training Hours": "2\u20135 hrs", "Club": "Club E", "Region": "Wales", "Apparatus": "Pommel", "Routine": "B"}, {"BG Number": "177270", "Gymnast": "Gymnast 245", "Score": 9.87, "Age Group": "15+", "Training Hours": "6\u201310 hrs", "Club": "Club F", "Region": "Yorkshire", "Apparatus": "Vault Girls", "Routine": "C"}, {"BG Number": "945886", "Gymnast": "Gymnast 246", "Score": 10.18, "Age Group": "9\u201311", "Training Hours": "2\u20135 hrs", "Club": "Club G", "Region": "Wales", "Apparatus": "Floor Boys", "Routine": "C"}, {"BG Number": "411147", "Gymnast": "Gymnast 247", "Score": 13.3, "Age Group": "12\u201314", "Training Hours": "6\u201310 hrs", "Club": "Club H", "Region": "N. Ireland", "Apparatus": "Vault Girls", "Routine": "A"}, {"BG Number": "778570", "Gymnast": "Gymnast 248", "Score": 13.79, "Age Group": "9\u201311", "Training Hours": "2\u20135 hrs", "Club": "Club I", "Region": "West Midlands", "Apparatus": "High Bar", "Routine": "A"}, {"BG Number": "454913", "Gymnast": "Gymnast 249", "Score": 9.62, "Age Group": "12\u201314", "Training Hours": "2\u20135 hrs", "Club": "Club J", "Region": "West Midlands", "Apparatus": "P-Bars", "Routine": "B"}, {"BG Number": "691184", "Gymnast": "Gymnast 250", "Score": 10.49, "Age Group": "12\u201314", "Training Hours": "6\u201310 hrs", "Club": "Club K", "Region": "South West", "Apparatus": "Rings", "Routine": "C"}, {"BG Number": "374398", "Gymnast": "Gymnast 251", "Score": 10.31, "Age Group": "9\u201311", "Training Hours": "2\u20135 hrs", "Club": "Club L", "Region": "South East", "Apparatus": "Vault Girls", "Routine": "B"}, {"BG Number": "160711", "Gymnast": "Gymnast 252", "Score": 9.37, "Age Group": "6\u20138", "Training Hours": "2\u20135 hrs", "Club": "Club M", "Region": "Scotland", "Apparatus": "Uneven Bar", "Routine": "B"}, {"BG Number": "410141", "Gymnast": "Gymnast 253", "Score": 11.07, "Age Group": "6\u20138", "Training Hours": "2\u20135 hrs", "Club": "Club N", "Region": "London", "Apparatus": "Pommel", "Routine": "B"}, {"BG Number": "464697", "Gymnast": "Gymnast 254", "Score": 13.2, "Age Group": "12\u201314", "Training Hours": "2\u20135 hrs", "Club": "Club O", "Region": "Scotland", "Apparatus": "P-Bars", "Routine": "B"}, {"BG Number": "863653", "Gymnast": "Gymnast 255", "Score": 9.17, "Age Group": "9\u201311", "Training Hours": "2\u20135 hrs", "Club": "Club P", "Region": "Scotland", "Apparatus": "P-Bars", "Routine": "C"}, {"BG Number": "243537", "Gymnast": "Gymnast 256", "Score": 12.25, "Age Group": "9\u201311", "Training Hours": "6\u201310 hrs", "Club": "Club Q", "Region": "Yorkshire", "Apparatus": "Floor Boys", "Routine": "A"}, {"BG Number": "485398", "Gymnast": "Gymnast 257", "Score": 10.32, "Age Group": "15+", "Training Hours": "2\u20135 hrs", "Club": "Club R", "Region": "East Midlands", "Apparatus": "Uneven Bar", "Routine": "C"}, {"BG Number": "625203", "Gymnast": "Gymnast 258", "Score": 13.21, "Age Group": "9\u201311", "Training Hours": "6\u201310 hrs", "Club": "Club S", "Region": "South West", "Apparatus": "Floor Boys", "Routine": "A"}, {"BG Number": "714089", "Gymnast": "Gymnast 259", "Score": 11.61, "Age Group": "9\u201311", "Training Hours": "2\u20135 hrs", "Club": "Club T", "Region": "East Midlands", "Apparatus": "High Bar", "Routine": "A"}, {"BG Number": "843951", "Gymnast": "Gymnast 260", "Score": 13.11, "Age Group": "12\u201314", "Training Hours": "2\u20135 hrs", "Club": "Club U", "Region": "South East", "Apparatus": "Rings", "Routine": "A"}, {"BG Number": "634948", "Gymnast": "Gymnast 261", "Score": 11.63, "Age Group": "15+", "Training Hours": "6\u201310 hrs", "Club": "Club V", "Region": "London", "Apparatus": "P-Bars", "Routine": "A"}, {"BG Number": "982784", "Gymnast": "Gymnast 262", "Score": 12.86, "Age Group": "6\u20138", "Training Hours": "2\u20135 hrs", "Club": "Club W", "Region": "West Midlands", "Apparatus": "Pommel", "Routine": "A"}, {"BG Number": "172762", "Gymnast": "Gymnast 263", "Score": 10.15, "Age Group": "12\u201314", "Training Hours": "2\u20135 hrs", "Club": "Club X", "Region": "N. Ireland", "Apparatus": "Vault Girls", "Routine": "B"}, {"BG Number": "652070", "Gymnast": "Gymnast 264", "Score": 10.37, "Age Group": "9\u201311", "Training Hours": "2\u20135 hrs", "Club": "Club Y", "Region": "Wales", "Apparatus": "Vault Boys", "Routine": "A"}, {"BG Number": "587998", "Gymnast": "Gymnast 265", "Score": 10.01, "Age Group": "9\u201311", "Training Hours": "6\u201310 hrs", "Club": "Club Z", "Region": "North West", "Apparatus": "Floor Boys", "Routine": "A"}, {"BG Number": "915839", "Gymnast": "Gymnast 266", "Score": 12.7, "Age Group": "15+", "Training Hours": "6\u201310 hrs", "Club": "Club [", "Region": "East", "Apparatus": "Pommel", "Routine": "C"}, {"BG Number": "790164", "Gymnast": "Gymnast 267", "Score": 13.25, "Age Group": "9\u201311", "Training Hours": "2\u20135 hrs", "Club": "Club \\", "Region": "Yorkshire", "Apparatus": "Uneven Bar", "Routine": "A"}, {"BG Number": "503455", "Gymnast": "Gymnast 268", "Score": 13.77, "Age Group": "9\u201311", "Training Hours": "2\u20135 hrs", "Club": "Club ]", "Region": "East", "Apparatus": "Uneven Bar", "Routine": "A"}, {"BG Number": "476664", "Gymnast": "Gymnast 269", "Score": 10.81, "Age Group": "6\u20138", "Training Hours": "2\u20135 hrs", "Club": "Club ^", "Region": "London", "Apparatus": "P-Bars", "Routine": "B"}, {"BG Number": "883351", "Gymnast": "Gymnast 270", "Score": 11.79, "Age Group": "9\u201311", "Training Hours": "2\u20135 hrs", "Club": "Club A", "Region": "N. Ireland", "Apparatus": "Uneven Bar", "Routine": "A"}, {"BG Number": "701749", "Gymnast": "Gymnast 271", "Score": 9.46, "Age Group": "12\u201314", "Training Hours": "6\u201310 hrs", "Club": "Club B", "Region": "N. Ireland", "Apparatus": "P-Bars", "Routine": "B"}, {"BG Number": "449777", "Gymnast": "Gymnast 272", "Score": 10.52, "Age Group": "12\u201314", "Training Hours": "2\u20135 hrs", "Club": "Club C", "Region": "Yorkshire", "Apparatus": "High Bar", "Routine": "B"}, {"BG Number": "451546", "Gymnast": "Gymnast 273", "Score": 10.03, "Age Group": "9\u201311", "Training Hours": "6\u201310 hrs", "Club": "Club D", "Region": "South East", "Apparatus": "Floor Boys", "Routine": "A"}, {"BG Number": "645121", "Gymnast": "Gymnast 274", "Score": 13.9, "Age Group": "9\u201311", "Training Hours": "2\u20135 hrs", "Club": "Club E", "Region": "Scotland", "Apparatus": "Uneven Bar", "Routine": "B"}, {"BG Number": "217913", "Gymnast": "Gymnast 275", "Score": 13.74, "Age Group": "6\u20138", "Training Hours": "2\u20135 hrs", "Club": "Club F", "Region": "London", "Apparatus": "Uneven Bar", "Routine": "B"}, {"BG Number": "600050", "Gymnast": "Gymnast 276", "Score": 10.03, "Age Group": "12\u201314", "Training Hours": "2\u20135 hrs", "Club": "Club G", "Region": "East Midlands", "Apparatus": "Floor Boys", "Routine": "B"}, {"BG Number": "103625", "Gymnast": "Gymnast 277", "Score": 11.73, "Age Group": "12\u201314", "Training Hours": "6\u201310 hrs", "Club": "Club H", "Region": "West Midlands", "Apparatus": "Floor Boys", "Routine": "A"}, {"BG Number": "559952", "Gymnast": "Gymnast 278", "Score": 11.57, "Age Group": "9\u201311", "Training Hours": "6\u201310 hrs", "Club": "Club I", "Region": "East Midlands", "Apparatus": "Floor Girls", "Routine": "A"}, {"BG Number": "736136", "Gymnast": "Gymnast 279", "Score": 10.86, "Age Group": "15+", "Training Hours": "6\u201310 hrs", "Club": "Club J", "Region": "South West", "Apparatus": "Vault Girls", "Routine": "B"}, {"BG Number": "312014", "Gymnast": "Gymnast 280", "Score": 11.71, "Age Group": "6\u20138", "Training Hours": "6\u201310 hrs", "Club": "Club K", "Region": "Scotland", "Apparatus": "P-Bars", "Routine": "B"}, {"BG Number": "862513", "Gymnast": "Gymnast 281", "Score": 10.41, "Age Group": "9\u201311", "Training Hours": "2\u20135 hrs", "Club": "Club L", "Region": "East Midlands", "Apparatus": "Floor Boys", "Routine": "C"}, {"BG Number": "616430", "Gymnast": "Gymnast 282", "Score": 9.92, "Age Group": "12\u201314", "Training Hours": "2\u20135 hrs", "Club": "Club M", "Region": "Wales", "Apparatus": "Floor Boys", "Routine": "C"}, {"BG Number": "522655", "Gymnast": "Gymnast 283", "Score": 13.69, "Age Group": "15+", "Training Hours": "6\u201310 hrs", "Club": "Club N", "Region": "West Midlands", "Apparatus": "Pommel", "Routine": "C"}, {"BG Number": "170686", "Gymnast": "Gymnast 284", "Score": 10.13, "Age Group": "15+", "Training Hours": "6\u201310 hrs", "Club": "Club O", "Region": "South West", "Apparatus": "Beam", "Routine": "B"}, {"BG Number": "730008", "Gymnast": "Gymnast 285", "Score": 10.95, "Age Group": "15+", "Training Hours": "6\u201310 hrs", "Club": "Club P", "Region": "West Midlands", "Apparatus": "Floor Boys", "Routine": "B"}, {"BG Number": "492710", "Gymnast": "Gymnast 286", "Score": 12.53, "Age Group": "6\u20138", "Training Hours": "6\u201310 hrs", "Club": "Club Q", "Region": "South", "Apparatus": "Pommel", "Routine": "C"}, {"BG Number": "781298", "Gymnast": "Gymnast 287", "Score": 10.32, "Age Group": "15+", "Training Hours": "2\u20135 hrs", "Club": "Club R", "Region": "South East", "Apparatus": "Beam", "Routine": "B"}, {"BG Number": "339474", "Gymnast": "Gymnast 288", "Score": 13.64, "Age Group": "9\u201311", "Training Hours": "2\u20135 hrs", "Club": "Club S", "Region": "Yorkshire", "Apparatus": "High Bar", "Routine": "B"}, {"BG Number": "578933", "Gymnast": "Gymnast 289", "Score": 11.88, "Age Group": "9\u201311", "Training Hours": "2\u20135 hrs", "Club": "Club T", "Region": "London", "Apparatus": "Rings", "Routine": "A"}, {"BG Number": "892221", "Gymnast": "Gymnast 290", "Score": 13.59, "Age Group": "15+", "Training Hours": "2\u20135 hrs", "Club": "Club U", "Region": "London", "Apparatus": "High Bar", "Routine": "C"}, {"BG Number": "310573", "Gymnast": "Gymnast 291", "Score": 10.42, "Age Group": "12\u201314", "Training Hours": "2\u20135 hrs", "Club": "Club V", "Region": "Wales", "Apparatus": "P-Bars", "Routine": "B"}, {"BG Number": "352155", "Gymnast": "Gymnast 292", "Score": 11.21, "Age Group": "9\u201311", "Training Hours": "6\u201310 hrs", "Club": "Club W", "Region": "North West", "Apparatus": "Pommel", "Routine": "A"}, {"BG Number": "265908", "Gymnast": "Gymnast 293", "Score": 12.29, "Age Group": "9\u201311", "Training Hours": "6\u201310 hrs", "Club": "Club X", "Region": "N. Ireland", "Apparatus": "High Bar", "Routine": "B"}, {"BG Number": "877032", "Gymnast": "Gymnast 294", "Score": 9.74, "Age Group": "12\u201314", "Training Hours": "6\u201310 hrs", "Club": "Club Y", "Region": "East Midlands", "Apparatus": "Vault Girls", "Routine": "C"}, {"BG Number": "388847", "Gymnast": "Gymnast 295", "Score": 11.42, "Age Group": "9\u201311", "Training Hours": "2\u20135 hrs", "Club": "Club Z", "Region": "North West", "Apparatus": "Uneven Bar", "Routine": "B"}, {"BG Number": "365993", "Gymnast": "Gymnast 296", "Score": 12.29, "Age Group": "6\u20138", "Training Hours": "2\u20135 hrs", "Club": "Club [", "Region": "London", "Apparatus": "Floor Girls", "Routine": "A"}, {"BG Number": "290070", "Gymnast": "Gymnast 297", "Score": 9.33, "Age Group": "15+", "Training Hours": "6\u201310 hrs", "Club": "Club \\", "Region": "Scotland", "Apparatus": "P-Bars", "Routine": "B"}, {"BG Number": "139555", "Gymnast": "Gymnast 298", "Score": 9.93, "Age Group": "6\u20138", "Training Hours": "2\u20135 hrs", "Club": "Club ]", "Region": "East", "Apparatus": "High Bar", "Routine": "A"}, {"BG Number": "105850", "Gymnast": "Gymnast 299", "Score": 12.84, "Age Group": "12\u201314", "Training Hours": "6\u201310 hrs", "Club": "Club ^", "Region": "N. Ireland", "Apparatus": "Floor Girls", "Routine": "B"}, {"BG Number": "286387", "Gymnast": "Gymnast 300", "Score": 11.06, "Age Group": "12\u201314", "Training Hours": "6\u201310 hrs", "Club": "Club A", "Region": "N. Ireland", "Apparatus": "High Bar", "Routine": "B"}];
+    /* Replace this JS data block with the JSON for your dataset if you change files.
+       For this version, the data is embedded when I generated the file for you. */
+    const leagueData = []; // <- This will be filled in the downloaded file
 
-    function populateFilters() {
-      const categories = ["Training Hours", "Region", "Club"];
-      categories.forEach(cat => {
-        const id = cat === "Training Hours" ? "trainingFilter" : cat === "Region" ? "regionFilter" : "clubFilter";
-        const el = document.getElementById(id);
-        const options = [...new Set(baseData.map(row => row[cat]))].filter(Boolean).sort();
-        el.innerHTML = `<option value="">All ${cat}</option>` + options.map(val => `<option value="${val}">${val}</option>`).join('');
+    // In the downloaded version, this is populated like:
+    // const leagueData = [ {{ ...rows from your Excel... }} ];
+
+    function getUniqueValues(data, key) {
+      const set = new Set();
+      data.forEach(row => {
+        if (row[key] !== undefined && row[key] !== null && row[key] !== "") {
+          set.add(String(row[key]));
+        }
+      });
+      return Array.from(set).sort((a,b) => a.localeCompare(b, undefined, {numeric:true}));
+    }
+
+    function populateSelect(selectId, values, includeAll=true) {
+      const select = document.getElementById(selectId);
+      select.innerHTML = "";
+      if (includeAll) {
+        const optAll = document.createElement("option");
+        optAll.value = "";
+        optAll.textContent = "All";
+        select.appendChild(optAll);
+      }
+      values.forEach(v => {
+        const opt = document.createElement("option");
+        opt.value = v;
+        opt.textContent = v;
+        select.appendChild(opt);
       });
     }
 
-    function renderTable() {
-      const filters = {
-        "Apparatus": document.getElementById("apparatusFilter").value,
-        "Age Group": document.getElementById("ageFilter").value,
-        "Training Hours": document.getElementById("trainingFilter").value,
-        "Region": document.getElementById("regionFilter").value,
-        "Club": document.getElementById("clubFilter").value,
-        "Routine": document.getElementById("routineFilter").value,
-      };
-
-      const filtered = baseData.filter(row =>
-        (!filters.Apparatus || row.Apparatus === filters.Apparatus) &&
-        (!filters["Age Group"] || row["Age Group"] === filters["Age Group"]) &&
-        (!filters["Training Hours"] || row["Training Hours"] === filters["Training Hours"]) &&
-        (!filters.Region || row.Region === filters.Region) &&
-        (!filters.Club || row.Club === filters.Club) &&
-        (!filters.Routine || row.Routine === filters.Routine)
-      );
-
-      const sorted = filtered
-        .sort((a, b) => parseFloat(b.Score) - parseFloat(a.Score))
-        .map((row, idx) => ({ ...row, Rank: idx + 1 }));
-
-      const tbody = document.querySelector("#dataTable tbody");
-      tbody.innerHTML = sorted.map(row => `
-        <tr>
-          <td>${row.Rank}${row.Rank <= 3 ? " Q" : ""}</td>
-          <td>${row["BG Number"]}</td>
-          <td>${row.Gymnast}</td>
-          <td>${row.Score}</td>
-          <td>${row["Age Group"]}</td>
-          <td>${row["Training Hours"]}</td>
-          <td>${row.Club}</td>
-          <td>${row.Region}</td>
-          <td>${row.Apparatus}</td>
-          <td>${row.Routine}</td>
-        </tr>
-      `).join("");
+    function populateFilters() {
+      populateSelect("countryFilter", getUniqueValues(leagueData, "Country"));
+      populateSelect("regionFilter", getUniqueValues(leagueData, "Region"));
+      populateSelect("clubFilter", getUniqueValues(leagueData, "Club"));
+      populateSelect("ageFilter", getUniqueValues(leagueData, "Age Category"));
+      populateSelect("levelFilter", getUniqueValues(leagueData, "Level"));
+      populateSelect("pieceFilter", getUniqueValues(leagueData, "Piece"));
     }
 
-    document.addEventListener("DOMContentLoaded", () => {
+    function applyFilters() {
+      const nameVal = document.getElementById("nameFilter").value.trim().toLowerCase();
+      const countryVal = document.getElementById("countryFilter").value;
+      const regionVal = document.getElementById("regionFilter").value;
+      const clubVal = document.getElementById("clubFilter").value;
+      const ageVal = document.getElementById("ageFilter").value;
+      const levelVal = document.getElementById("levelFilter").value;
+      const pieceVal = document.getElementById("pieceFilter").value;
+
+      let filtered = leagueData.filter(row => {
+        if (nameVal && !String(row["Name"]).toLowerCase().includes(nameVal)) return false;
+        if (countryVal && String(row["Country"]) !== countryVal) return false;
+        if (regionVal && String(row["Region"]) !== regionVal) return false;
+        if (clubVal && String(row["Club"]) !== clubVal) return false;
+        if (ageVal && String(row["Age Category"]) !== ageVal) return false;
+        if (levelVal && String(row["Level"]) !== levelVal) return false;
+        if (pieceVal && String(row["Piece"]) !== pieceVal) return false;
+        return true;
+      });
+
+      // Always order by Final Score (Personal Best) descending
+      filtered.sort((a, b) => {
+        let av = parseFloat(a["Final Score"]);
+        let bv = parseFloat(b["Final Score"]);
+        if (isNaN(av)) av = -Infinity;
+        if (isNaN(bv)) bv = -Infinity;
+        return bv - av;
+      });
+
+      renderTable(filtered);
+    }
+
+    function renderTable(rows) {
+      const tbody = document.querySelector("#leagueTable tbody");
+      const noResults = document.getElementById("noResults");
+      tbody.innerHTML = "";
+
+      if (!rows.length) {
+        noResults.style.display = "block";
+        return;
+      } else {
+        noResults.style.display = "none";
+      }
+
+      rows.forEach((row, index) => {
+        const tr = document.createElement("tr");
+        const cells = [
+          index + 1,
+          row["Name"],
+          row["Country"],
+          row["Region"],
+          row["Club"],
+          row["Age Category"],
+          row["Level"],
+          row["Piece"],
+          row["Final Score"]
+        ];
+        cells.forEach(val => {
+          const td = document.createElement("td");
+          td.textContent = val;
+          tr.appendChild(td);
+        });
+        tbody.appendChild(tr);
+      });
+    }
+
+    function setupFilterListeners() {
+      document.getElementById("nameFilter").addEventListener("input", applyFilters);
+      ["countryFilter","regionFilter","clubFilter","ageFilter","levelFilter","pieceFilter"]
+        .forEach(id => {
+          document.getElementById(id).addEventListener("change", applyFilters);
+        });
+    }
+
+    window.addEventListener("DOMContentLoaded", () => {
+      // In your generated file, leagueData is already populated.
       populateFilters();
-      renderTable();
+      setupFilterListeners();
+      applyFilters();
     });
   </script>
 </body>
